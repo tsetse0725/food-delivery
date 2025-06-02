@@ -1,6 +1,17 @@
 import { Input } from "@/components/ui/input";
+import { FormikProps } from "formik";
 
-export default function StepOneEmail({ formik }: any) {
+interface FormValues {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export default function StepOneEmail({
+  formik,
+}: {
+  formik: FormikProps<FormValues>;
+}) {
   return (
     <>
       <h1 className="text-2xl font-bold mb-1">Create your account</h1>

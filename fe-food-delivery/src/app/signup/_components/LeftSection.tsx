@@ -7,6 +7,7 @@ import StepOneEmail from "./StepOneEmail";
 import StepTwoPassword from "./StepTwoPassword";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LeftSection() {
   const [step, setStep] = useState(1);
@@ -31,6 +32,8 @@ export default function LeftSection() {
         })
   );
 
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -43,6 +46,7 @@ export default function LeftSection() {
         setStep(2);
       } else {
         console.log("Form Submitted!", values);
+        router.push("/");
       }
     },
   });
@@ -51,7 +55,7 @@ export default function LeftSection() {
     <div className="w-1/2 bg-white h-screen flex items-center justify-center px-10">
       <form
         onSubmit={formik.handleSubmit}
-        className="w-full max-w-sm flex flex-col items-center space-y-4"
+        className="w-[416px] flex flex-col items-start space-y-4"
       >
         <div className="self-start">
           {step === 2 && (
@@ -79,7 +83,7 @@ export default function LeftSection() {
           {step === 1 ? "Let's Go" : "Create Account"}
         </Button>
 
-        <p className="text-sm text-gray-600 text-center">
+        <p className="text-sm text-gray-600 w-full text-center">
           Already have an account?{" "}
           <a href="#" className="text-blue-600 hover:underline">
             Log in

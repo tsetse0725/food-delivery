@@ -1,7 +1,18 @@
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { FormikProps } from "formik";
 
-export default function StepTwoPassword({ formik }: any) {
+interface FormValues {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export default function StepTwoPassword({
+  formik,
+}: {
+  formik: FormikProps<FormValues>;
+}) {
   const [show, setShow] = useState(false);
 
   return (
@@ -24,7 +35,7 @@ export default function StepTwoPassword({ formik }: any) {
             : ""
         }`}
       />
-      <div className="min-h-[20px]">
+      <div className="min-h-[1px]">
         {formik.touched.password && formik.errors.password && (
           <p className="text-red-500 text-sm">{formik.errors.password}</p>
         )}
@@ -43,7 +54,7 @@ export default function StepTwoPassword({ formik }: any) {
             : ""
         }`}
       />
-      <div className="min-h-[20px]">
+      <div className="min-h-[1px]">
         {formik.touched.confirmPassword && formik.errors.confirmPassword && (
           <p className="text-red-500 text-sm">
             {formik.errors.confirmPassword}
