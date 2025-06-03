@@ -6,7 +6,7 @@ export default function StepTwoPassword({ formik }: any) {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-1">Create a strong password</h1>
+      <h1 className="text-2xl font-bold mb-1 ">Create a strong password</h1>
       <p className="text-gray-500 mb-3">
         Create a strong password with letters, numbers.
       </p>
@@ -50,7 +50,6 @@ export default function StepTwoPassword({ formik }: any) {
           </p>
         )}
       </div>
-
       <label className="text-sm flex gap-2 items-center w-full max-w-[416px]">
         <input type="checkbox" onChange={() => setShow(!show)} />
         Show password

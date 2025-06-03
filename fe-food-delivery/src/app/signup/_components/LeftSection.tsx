@@ -53,7 +53,6 @@ export default function LeftSection() {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-sm flex flex-col items-center space-y-4"
       >
-        {/* ← Back button */}
         <div className="self-start">
           {step === 2 && (
             <button
@@ -66,11 +65,9 @@ export default function LeftSection() {
           )}
         </div>
 
-        {/* Content */}
         {step === 1 && <StepOneEmail formik={formik} />}
         {step === 2 && <StepTwoPassword formik={formik} />}
 
-        {/* Button */}
         <Button
           type="submit"
           disabled={
@@ -82,7 +79,6 @@ export default function LeftSection() {
           {step === 1 ? "Let's Go" : "Create Account"}
         </Button>
 
-        {/* Footer */}
         <p className="text-sm text-gray-600 text-center">
           Already have an account?{" "}
           <a href="#" className="text-blue-600 hover:underline">
