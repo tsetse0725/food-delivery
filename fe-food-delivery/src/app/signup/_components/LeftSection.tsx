@@ -85,7 +85,7 @@ export default function LeftSection() {
 
         <p className="text-sm text-gray-600 w-full text-center">
           Already have an account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-blue-600 hover:no-underline">
             Log in
           </a>
         </p>
