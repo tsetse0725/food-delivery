@@ -1,6 +1,8 @@
-import express, { request, Request, Response } from "express";
+import express, { request, Request, response, Response } from "express";
 import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
+import cors from "cors";
 
 const databaseConnect = async () => {
   try {
@@ -25,33 +27,47 @@ const UserModel = model("Users", Users);
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 databaseConnect();
 
-app.get("/users", async (_request: Request, response: Response) => {
-  const users = await UserModel.find();
-  response.send(users);
+app.get("/", async (request: Request, response: Response) => {
+  response.send("Hello world");
 });
 
-app.get("/user", async (_request: Request, response: Response) => {
-  const user = await UserModel.findOne({ email: "tse9406@yahoo.com" });
-  response.send(user);
-});
-
-app.put("/change", async (request: Request, response: Response) => {
-  const { email, input } = request.body;
-  const changeUser = await UserModel.findOneAndUpdate(
-    { email },
-    { email: input.email, password: input.password },
-    { new: true }
-  );
-  response.send(changeUser);
-});
-
-app.post(`/adduser`, async (request: Request, response: Response) => {
+app.post("/signup", async (request: Request, response: Response) => {
   const { email, password } = request.body;
-  const result = await UserModel.create({ email, password });
-  response.send(result);
+  const isEmailExisted = await UserModel.findOne({ email });
+
+  if (!isEmailExisted) {
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    await UserModel.create({ email, password: hashedPassword });
+    response.send({ message: "Successfully registered" });
+    return;
+  }
+  response.status(400).send({ message: "User already existed" });
+});
+
+app.post("/login", async (request: Request, response: Response) => {
+  const { email, password } = request.body;
+  const isEmailExisted = await UserModel.findOne({ email });
+
+  if (!isEmailExisted) {
+    response.status(400).send({ message: "User doesn't existed" });
+    return;
+  } else {
+    const hashedPassword = await bcrypt.compareSync(
+      password,
+      isEmailExisted.password!
+    );
+
+    if (hashedPassword) {
+      response.send({ message: "Successfully logged in" });
+    } else {
+      response.send({ message: "Wrong password, try again" });
+      return;
+    }
+  }
 });
 
 app.listen(8000, () => {

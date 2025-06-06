@@ -8,6 +8,7 @@ import StepTwoPassword from "./StepTwoPassword";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function LeftSection() {
   const [step, setStep] = useState(1);
@@ -41,12 +42,26 @@ export default function LeftSection() {
       confirmPassword: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (step === 1) {
         setStep(2);
       } else {
-        console.log("Form Submitted!", values);
-        router.push("/");
+        try {
+          const response = await axios.post("http://localhost:8000/signup", {
+            email: values.email,
+            password: values.password,
+          });
+          console.log("Success:", response.data);
+          router.push("/");
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 400) {
+              alert(error.response.data.message);
+            }
+          } else {
+            alert("Алдаа гарлаа.");
+          }
+        }
       }
     },
   });
