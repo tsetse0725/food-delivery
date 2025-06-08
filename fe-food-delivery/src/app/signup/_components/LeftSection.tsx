@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Link from "next/link";
 
 export default function LeftSection() {
   const [step, setStep] = useState(1);
@@ -100,9 +101,9 @@ export default function LeftSection() {
 
         <p className="text-sm text-gray-600 w-full text-center">
           Already have an account?{" "}
-          <a href="#" className="text-blue-600 hover:no-underline">
+          <Link href="/login" className="text-blue-600 hover:no-underline">
             Log in
-          </a>
+          </Link>
         </p>
       </form>
     </div>

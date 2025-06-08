@@ -1,4 +1,4 @@
-import express, { request, Request, response, Response } from "express";
+import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
@@ -56,7 +56,7 @@ app.post("/login", async (request: Request, response: Response) => {
     response.status(400).send({ message: "User doesn't existed" });
     return;
   } else {
-    const hashedPassword = await bcrypt.compareSync(
+    const hashedPassword = bcrypt.compareSync(
       password,
       isEmailExisted.password!
     );
@@ -64,7 +64,7 @@ app.post("/login", async (request: Request, response: Response) => {
     if (hashedPassword) {
       response.send({ message: "Successfully logged in" });
     } else {
-      response.send({ message: "Wrong password, try again" });
+      response.status(400).send({ message: "Wrong password, try again" }); // ← зөв засвар
       return;
     }
   }
