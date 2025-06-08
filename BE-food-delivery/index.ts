@@ -14,7 +14,6 @@ const databaseConnect = async () => {
     console.log(err);
   }
 };
-
 const Users = new Schema({
   email: { type: String, require: true },
   password: { type: String, require: true },
