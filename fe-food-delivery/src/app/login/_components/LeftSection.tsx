@@ -30,7 +30,7 @@ export default function LeftSection() {
           password: values.password,
         });
         console.log("Login success:", res.data);
-        router.push("/"); // эсвэл dashboard руу
+        router.push("/");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 400) {
@@ -82,7 +82,7 @@ export default function LeftSection() {
           <p className="text-red-500 text-sm">{formik.errors.password}</p>
         )}
 
-        <p className="text-sm text-black-600 underline cursor-pointer">
+        <p className="text-sm text-black-600 no-underline cursor-pointer">
           Forgot password ?
         </p>
 

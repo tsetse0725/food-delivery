@@ -63,7 +63,7 @@ app.post("/login", async (request: Request, response: Response) => {
     if (hashedPassword) {
       response.send({ message: "Successfully logged in" });
     } else {
-      response.status(400).send({ message: "Wrong password, try again" }); // ← зөв засвар
+      response.status(400).send({ message: "Wrong password, try again" });
       return;
     }
   }
