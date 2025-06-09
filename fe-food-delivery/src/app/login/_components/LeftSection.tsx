@@ -30,7 +30,9 @@ export default function LeftSection() {
           password: values.password,
         });
         console.log("Login success:", res.data);
+                  localStorage.setItem("token", res.data.token);
         router.push("/");
+
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 400) {

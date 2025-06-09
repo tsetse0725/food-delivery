@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import cors from "cors";
+import jwt from "jsonwebtoken"
 
 const databaseConnect = async () => {
   try {
@@ -61,7 +62,11 @@ app.post("/login", async (request: Request, response: Response) => {
     );
 
     if (hashedPassword) {
-      response.send({ message: "Successfully logged in" });
+      const token = jwt.sign(
+        {userId : isEmailExisted._id},
+        "foodDelivery"
+      );
+      response.send({ message: "Successfully logged in", token });
     } else {
       response.status(400).send({ message: "Wrong password, try again" });
       return;
