@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import cors from "cors";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const databaseConnect = async () => {
   try {
@@ -62,15 +62,33 @@ app.post("/login", async (request: Request, response: Response) => {
     );
 
     if (hashedPassword) {
-      const token = jwt.sign(
-        {userId : isEmailExisted._id},
-        "foodDelivery"
-      );
+      const token = jwt.sign({ userId: isEmailExisted._id }, "foodDelivery");
       response.send({ message: "Successfully logged in", token });
     } else {
       response.status(400).send({ message: "Wrong password, try again" });
       return;
     }
+  }
+});
+
+app.post("/verify", async (request: Request, response: Response) => {
+  const { token } = request.body;
+
+  const tokenPassword = "foodDelivery";
+  try {
+    const isValid = jwt.verify(token, tokenPassword);
+    if (isValid) {
+      const destructToken = jwt.decode(token);
+
+      response.send({ destructToken });
+      return;
+    } else {
+      response.status(401).send({ message: "token is not valid" });
+      return;
+    }
+  } catch (err) {
+    response.status(401).send({ message: "token is not valid" });
+    return;
   }
 });
 

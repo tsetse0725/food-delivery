@@ -1,7 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 type UserData = {
   userId: string;
@@ -9,23 +18,35 @@ type UserData = {
 
 type AuthContextType = {
   user: UserData | null;
+  tokenChecker: (_token: string) => Promise<void>;
   loading: boolean;
 };
 
-// 👉 createContext-д зөв анхны утга өгч байна
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
-});
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const tokenChecker = async (token: string) => {
+    try {
+      const response = await axios.post("http://localhost:8000/verify", {
+        token: token,
+      });
+      setUser({ userId: response.data.destructToken.userId });
+    } catch (err) {
+      router.push("/login");
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
+      tokenChecker(token);
       try {
         const decoded = jwtDecode<UserData>(token);
         setUser(decoded);
@@ -33,13 +54,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Invalid token", err);
         setUser(null);
       }
+    } else {
+      router.push("/login");
     }
 
     setLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, tokenChecker }}>
       {children}
     </AuthContext.Provider>
   );

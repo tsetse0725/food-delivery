@@ -10,7 +10,9 @@ export default function Home() {
     <div className="p-10">
       <h1 className="text-2xl font-bold mb-4">Home Page</h1>
       {user ? (
-        <p>🟢 Нэвтэрсэн хэрэглэгчийн ID: <strong>{user.userId}</strong></p>
+        <p>
+          🟢 Нэвтэрсэн хэрэглэгчийн ID: <strong>{user.userId}</strong>
+        </p>
       ) : (
         <p>🔴 Та нэвтрээгүй байна.</p>
       )}
