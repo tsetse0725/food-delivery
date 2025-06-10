@@ -1,8 +1,19 @@
 "use client";
+
 import { useAuth } from "@/app/_components/UserProvider";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { user, loading } = useAuth();
+  const router = useRouter();
+
+  // ✅ Хэрэглэгч байхгүй бол login руу үсэрнэ
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading]);
 
   if (loading) return <p>⏳ Түр хүлээнэ үү...</p>;
 
@@ -14,7 +25,7 @@ export default function Home() {
           🟢 Нэвтэрсэн хэрэглэгчийн ID: <strong>{user.userId}</strong>
         </p>
       ) : (
-        <p>🔴 Та нэвтрээгүй байна.</p>
+        <p>🔴 Та нэвтрээгүй байна.</p> // Энэ хэсэг бараг харагдахгүй, шууд redirect хийнэ
       )}
     </div>
   );

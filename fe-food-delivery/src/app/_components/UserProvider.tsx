@@ -7,10 +7,9 @@ import {
   useState,
   ReactNode,
 } from "react";
-
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type UserData = {
   userId: string;
@@ -34,11 +33,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const tokenChecker = async (token: string) => {
     try {
       const response = await axios.post("http://localhost:8000/verify", {
-        token: token,
+        token,
       });
       setUser({ userId: response.data.destructToken.userId });
     } catch (err) {
-      router.push("/login");
+      setUser(null); // ❗ token буруу бол context-д null болгоно
     }
   };
 
@@ -46,19 +45,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      tokenChecker(token);
+      tokenChecker(token).finally(() => {
+        setLoading(false);
+      });
+
       try {
         const decoded = jwtDecode<UserData>(token);
         setUser(decoded);
       } catch (err) {
         console.error("Invalid token", err);
         setUser(null);
+        setLoading(false);
       }
     } else {
-      router.push("/login");
+      // ❌ redirect хийхгүй!
+      setLoading(false);
     }
-
-    setLoading(false);
   }, []);
 
   return (

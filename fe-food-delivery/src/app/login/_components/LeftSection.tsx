@@ -8,9 +8,11 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import { useAuth } from "@/app/_components/UserProvider"; // ✅ context-оос tokenChecker авна
 
 export default function LeftSection() {
   const router = useRouter();
+  const { tokenChecker } = useAuth(); // ✅ context function авсан
 
   const formik = useFormik({
     initialValues: {
@@ -29,10 +31,14 @@ export default function LeftSection() {
           email: values.email,
           password: values.password,
         });
-        console.log("Login success:", res.data);
-                  localStorage.setItem("token", res.data.token);
-        router.push("/");
 
+        console.log("Login success:", res.data);
+        localStorage.setItem("token", res.data.token);
+
+        // ✅ context-оо шинэчилнэ
+        await tokenChecker(res.data.token);
+
+        // ❌ router.push("/") хэрэггүй — LoginPage context-оор хийж байгаа
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 400) {

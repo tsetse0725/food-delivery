@@ -52,8 +52,11 @@ export default function LeftSection() {
             email: values.email,
             password: values.password,
           });
+
           console.log("Success:", response.data);
-          router.push("/");
+
+          // ✅ Амжилттай бүртгүүлсний дараа login page рүү үсэрнэ
+          router.push("/login");
         } catch (error) {
           if (axios.isAxiosError(error)) {
             if (error.response?.status === 400) {
