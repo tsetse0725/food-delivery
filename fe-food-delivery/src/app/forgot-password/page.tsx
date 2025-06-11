@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 import Image from "next/image";
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (!loading && user) {
@@ -17,54 +16,59 @@ export default function LoginPage() {
     }
   }, [user, loading]);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const res = await fetch("/api/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (res.ok) {
+      alert("Reset link sent!");
+    } else {
+      alert("Failed to send reset link.");
+    }
+  };
+
   return (
     <div className="flex h-screen">
       {/* Left side */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-4">
-          {/* ← Back button with slightly rounded corners */}
+          {/* ← Back button */}
           <button
-            onClick={() => router.push("/signup")}
+            onClick={() => router.push("/login")}
             className="w-8 h-8 rounded-[5%] border flex items-center justify-center bg-white shadow hover:bg-gray-100 transition"
-            aria-label="Back"
+            aria-label="Back to Login"
           >
             <span className="text-xl">←</span>
           </button>
 
-          {/* Login form */}
-          <h1 className="text-2xl font-bold">Log in</h1>
+          {/* Reset form */}
+          <h2 className="text-2xl font-bold">Reset your password</h2>
           <p className="text-sm text-gray-500">
-            Log in to enjoy your favorite dishes.
+            Enter your email and we’ll send you a reset link.
           </p>
 
-          <input
-            type="text"
-            placeholder="Enter your email or phone number"
-            className="w-full border px-4 py-2 rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="example@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full border px-4 py-2 rounded"
+            />
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border px-4 py-2 rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <p className="text-sm">
-            <a href="/forgot-password" className="text-black hover:no-underline">
-              Forgot password ?
-            </a>
-          </p>
-
-          <button
-            disabled
-            className="w-full py-2 bg-gray-200 text-gray-400 rounded  cursor-not-allowed"
-          >
-            Let's Go
-          </button>
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+            >
+              Send Reset Link
+            </button>
+          </form>
 
           <p className="text-center text-sm text-gray-500">
             Don’t have an account?{" "}
@@ -75,11 +79,11 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right side image */}
+      {/* Right side: image */}
       <div className="hidden md:block w-1/2 relative">
         <Image
           src="/signup.png"
-          alt="Login Visual"
+          alt="Forgot Password"
           fill
           className="object-cover"
           priority
