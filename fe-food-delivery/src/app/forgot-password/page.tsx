@@ -3,90 +3,108 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
-import Image from "next/image";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
+  const { user, loading } = useAuth();
+
+  // ✅ Нэвтэрсэн хэрэглэгчийг homepage рүү оруулах
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
-    const res = await fetch("/api/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch("http://localhost:8000/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    if (res.ok) {
-      alert("Reset link sent!");
-    } else {
-      alert("Failed to send reset link.");
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("reset-email", email);
+        router.push("/forgot-password/VerifyOtp");
+      } else {
+        setError(data.message || "Something went wrong");
+      }
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      setError("Failed to send OTP");
     }
   };
 
   return (
     <div className="flex h-screen">
-      {/* Left side */}
+      {/* Зүүн тал */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
-        <div className="w-full max-w-sm space-y-4">
-          {/* ← Back button */}
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
           <button
+            type="button"
             onClick={() => router.push("/login")}
-            className="w-8 h-8 rounded-[5%] border flex items-center justify-center bg-white shadow hover:bg-gray-100 transition"
-            aria-label="Back to Login"
+            className="text-xl w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
           >
-            <span className="text-xl">←</span>
+            ←
           </button>
 
-          {/* Reset form */}
           <h2 className="text-2xl font-bold">Reset your password</h2>
-          <p className="text-sm text-gray-500">
-            Enter your email and we’ll send you a reset link.
+          <p className="text-sm text-gray-600">
+            Enter your email to receive a password reset link.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="email"
-              placeholder="example@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border px-4 py-2 rounded"
-            />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@gmail.com"
+            className="w-full border px-4 py-2 rounded"
+          />
 
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
-            >
-              Send Reset Link
-            </button>
-          </form>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <p className="text-center text-sm text-gray-500">
+          <button
+            type="submit"
+            disabled={!isValidEmail(email)}
+            className={`w-full py-2 rounded font-semibold transition ${
+              !isValidEmail(email)
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-black text-white hover:bg-gray-800"
+            }`}
+          >
+            Send link
+          </button>
+
+          <p className="text-sm text-gray-600">
             Don’t have an account?{" "}
-            <a href="/signup" className="text-blue-500 hover:underline">
+            <span
+              className="text-blue-500 hover:underline cursor-pointer"
+              onClick={() => router.push("/signup")}
+            >
               Sign up
-            </a>
+            </span>
           </p>
-        </div>
+        </form>
       </div>
 
-      {/* Right side: image */}
+      {/* Баруун зураг */}
       <div className="hidden md:block w-1/2 relative">
-        <Image
+        <img
           src="/signup.png"
-          alt="Forgot Password"
-          fill
-          className="object-cover"
-          priority
+          alt="Reset confirmation"
+          className="w-full h-full object-cover"
         />
       </div>
     </div>

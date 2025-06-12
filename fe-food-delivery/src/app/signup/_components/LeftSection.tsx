@@ -54,8 +54,6 @@ export default function LeftSection() {
           });
 
           console.log("Success:", response.data);
-
-          // ✅ Амжилттай бүртгүүлсний дараа login page рүү үсэрнэ
           router.push("/login");
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -71,7 +69,7 @@ export default function LeftSection() {
   });
 
   return (
-    <div className="w-1/2 bg-white h-screen flex items-center justify-center px-10">
+    <div className="bg-white h-screen flex items-center justify-center px-10">
       <form
         onSubmit={formik.handleSubmit}
         className="w-[416px] flex flex-col items-start space-y-4"
@@ -103,7 +101,7 @@ export default function LeftSection() {
         </Button>
 
         <p className="text-sm text-gray-600 w-full text-center">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link href="/login" className="text-blue-600 hover:no-underline">
             Log in
           </Link>
@@ -111,4 +109,4 @@ export default function LeftSection() {
       </form>
     </div>
   );
-} 
+}

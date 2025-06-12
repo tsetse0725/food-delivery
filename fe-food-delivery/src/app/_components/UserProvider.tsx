@@ -7,9 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 type UserData = {
   userId: string;
@@ -17,50 +15,33 @@ type UserData = {
 
 type AuthContextType = {
   user: UserData | null;
-  tokenChecker: (_token: string) => Promise<void>;
+  tokenChecker: (token: string) => Promise<boolean>;
   loading: boolean;
 };
 
-export const AuthContext = createContext<AuthContextType>(
-  {} as AuthContextType
-);
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
-  const tokenChecker = async (token: string) => {
+  const tokenChecker = async (token: string): Promise<boolean> => {
     try {
-      const response = await axios.post("http://localhost:8000/verify", {
-        token,
-      });
-      setUser({ userId: response.data.destructToken.userId });
-    } catch (err) {
-      setUser(null); // ❗ token буруу бол context-д null болгоно
+      const res = await axios.post("http://localhost:8000/verify", { token });
+      const { destructToken } = res.data;
+      setUser({ userId: destructToken.userId });
+      return true;
+    } catch {
+      setUser(null);
+      return false;
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) return setLoading(false);
 
-    if (token) {
-      tokenChecker(token).finally(() => {
-        setLoading(false);
-      });
-
-      try {
-        const decoded = jwtDecode<UserData>(token);
-        setUser(decoded);
-      } catch (err) {
-        console.error("Invalid token", err);
-        setUser(null);
-        setLoading(false);
-      }
-    } else {
-      // ❌ redirect хийхгүй!
-      setLoading(false);
-    }
+    tokenChecker(token).finally(() => setLoading(false));
   }, []);
 
   return (
