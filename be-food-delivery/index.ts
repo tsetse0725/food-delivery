@@ -29,6 +29,8 @@ const OtpSchema = new mongoose.Schema({
   code: { type: String, required: true },
   expiresAt: { type: Date, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true },
+  email: { type: String, required: true }, // ✅ Имэйл хадгалах
+  createdAt: { type: Date, default: Date.now },
 });
 const OtpModel = mongoose.model("Otp", OtpSchema);
 
@@ -78,11 +80,8 @@ app.post("/login", async (req: Request, res: Response) => {
 app.post("/forgot-password", async (req: Request, res: Response) => {
   const { email } = req.body;
   const trimmedEmail = email.toLowerCase().trim();
-  console.log("📨 Email received:", trimmedEmail);
 
   const user = await UserModel.findOne({ email: trimmedEmail });
-  console.log("🔎 User хайлтын үр дүн:", user);
-
   if (!user) {
     return res.status(400).json({ message: "User not found" });
   }
@@ -90,7 +89,7 @@ app.post("/forgot-password", async (req: Request, res: Response) => {
   const code = generateOTP();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-  await OtpModel.create({ code, expiresAt, user: user._id });
+  await OtpModel.create({ code, expiresAt, user: user._id, email: trimmedEmail });
 
   await transporter.sendMail({
     from: "tse9406@gmail.com",
@@ -115,7 +114,8 @@ app.post("/verify-otp", async (req: Request, res: Response) => {
   const otpEntry = await OtpModel.findOne({
     code: String(code),
     user: user._id,
-  }).populate("user");
+    email: trimmedEmail,
+  });
 
   if (!otpEntry) {
     return res.status(400).json({ message: "Invalid OTP" });
