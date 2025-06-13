@@ -48,10 +48,13 @@ export default function LeftSection() {
         setStep(2);
       } else {
         try {
-          const response = await axios.post("http://localhost:8000/signup", {
-            email: values.email,
-            password: values.password,
-          });
+          const response = await axios.post(
+            "https://food-delivery-zuu9.onrender.com/signup", // ✅ Render backend URL
+            {
+              email: values.email,
+              password: values.password,
+            }
+          );
 
           console.log("Success:", response.data);
           router.push("/login");
@@ -101,7 +104,7 @@ export default function LeftSection() {
         </Button>
 
         <p className="text-sm text-gray-600 w-full text-center">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="text-blue-600 hover:no-underline">
             Log in
           </Link>

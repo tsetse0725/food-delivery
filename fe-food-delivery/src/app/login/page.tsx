@@ -11,7 +11,6 @@ export default function LoginPage() {
   const router = useRouter();
   const { user, loading, tokenChecker } = useAuth();
 
-  // Нэвтэрсэн бол homepage рүү
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
@@ -35,9 +34,17 @@ export default function LoginPage() {
           body: JSON.stringify(values),
         });
 
+        const contentType = res.headers.get("content-type");
+
         if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Login failed");
+          if (contentType?.includes("application/json")) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Login failed");
+          } else {
+            const text = await res.text();
+            console.error("❌ Server returned non-JSON:", text);
+            throw new Error("Серверээс алдаатай хариу ирлээ.");
+          }
         }
 
         const data = await res.json();
@@ -45,24 +52,22 @@ export default function LoginPage() {
 
         const valid = await tokenChecker(data.token);
         if (valid) {
-          router.push("/"); // 🏠 Homepage рүү navigate
+          router.push("/");
         }
       } catch (error: any) {
         alert(error.message || "Нэвтрэхэд алдаа гарлаа.");
-        // console.error(error); // Хүсвэл устгаж болно
       }
     },
   });
 
   return (
     <div className="flex h-screen">
-      {/* Зүүн талын форм */}
+      {/* Зүүн тал */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form
           onSubmit={formik.handleSubmit}
           className="w-full max-w-sm space-y-4"
         >
-          {/* Back button */}
           <button
             onClick={() => router.push("/signup")}
             type="button"
@@ -130,7 +135,7 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* Баруун талын зураг */}
+      {/* Баруун тал */}
       <div className="hidden md:block w-1/2 relative">
         <Image
           src="/signup.png"

@@ -17,11 +17,14 @@ export default function LeftSection() {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res = await fetch("http://localhost:8000/forgot-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: values.email }),
-        });
+        const res = await fetch(
+          "https://food-delivery-zuu9.onrender.com/forgot-password",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: values.email }),
+          }
+        );
 
         if (res.ok) {
           alert("Reset link sent to your email!");
@@ -79,7 +82,7 @@ export default function LeftSection() {
         </button>
 
         <p className="text-center text-sm text-gray-500">
-          Don’t have an account?{' '}
+          Don’t have an account?{" "}
           <a href="/signup" className="text-blue-500 hover:underline">
             Sign up
           </a>

@@ -1,4 +1,4 @@
-// ✅ RightSection.tsx
+
 export default function RightSection({ src }: { src: string }) {
   return (
     <div className="w-1/2 h-screen hidden md:block">

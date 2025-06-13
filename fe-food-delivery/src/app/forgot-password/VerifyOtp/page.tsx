@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/app/_components/UserProvider"; // ✅ Нэмэх
+import { useAuth } from "@/app/_components/UserProvider";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
@@ -10,28 +10,32 @@ export default function VerifyOtpPage() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
-  const { user, loading } = useAuth(); // ✅ context-оос user, loading авах
+  const { user, loading } = useAuth();
 
-  // ✅ Хэрвээ нэвтэрсэн бол homepage рүү үсрэх
+  // Нэвтэрсэн хэрэглэгчийг шууд homepage рүү үсрүүлэх
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
+  // localStorage-оос email авах
   useEffect(() => {
     const stored = localStorage.getItem("reset-email");
-    if (stored) setEmail(stored);
+    if (stored) setEmail(stored.trim());
   }, []);
 
+  // ✅ OTP verify хийх
   const handleVerify = async () => {
     setError("");
-
     try {
-      const res = await fetch("http://localhost:8000/verify-otp", {
+      const res = await fetch("https://food-delivery-zuu9.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({
+          email: email.toLowerCase().trim(),
+          code: otp,
+        }),
       });
 
       const data = await res.json();
@@ -47,13 +51,14 @@ export default function VerifyOtpPage() {
     }
   };
 
+  // ✅ Resend OTP
   const handleResend = async () => {
     if (!email) return;
     try {
-      const res = await fetch("http://localhost:8000/forgot-password", {
+      const res = await fetch("https://food-delivery-zuu9.onrender.com/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.toLowerCase().trim() }),
       });
 
       if (!res.ok) {
@@ -68,7 +73,6 @@ export default function VerifyOtpPage() {
     <div className="flex h-screen">
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-6">
-          {/* Back button */}
           <button
             type="button"
             onClick={() => router.push("/forgot-password")}

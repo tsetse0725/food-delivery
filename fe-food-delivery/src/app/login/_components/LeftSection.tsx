@@ -29,10 +29,13 @@ export default function LeftSection() {
     validateOnChange: true,
     onSubmit: async (values) => {
       try {
-        const res = await axios.post("http://localhost:8000/login", {
-          email: values.email,
-          password: values.password,
-        });
+        const res = await axios.post(
+          "https://food-delivery-zuu9.onrender.com/login",
+          {
+            email: values.email,
+            password: values.password,
+          }
+        );
 
         console.log("Login success:", res.data);
         localStorage.setItem("token", res.data.token);
@@ -94,12 +97,15 @@ export default function LeftSection() {
           <p className="text-red-500 text-sm">{formik.errors.password}</p>
         )}
 
-        {/* Forgot password */}
-        <p className="text-sm text-black-600 no-underline cursor-pointer">
-          Forgot password ?
-        </p>
+        {/* Forgot password линк */}
+        <Link
+          href="/forgot-password"
+          className="text-sm text-blue-600 hover:underline self-start"
+        >
+          Forgot password?
+        </Link>
 
-        {/* Submit button */}
+        {/* Submit товч */}
         <Button
           type="submit"
           disabled={!(formik.dirty && formik.isValid)}
