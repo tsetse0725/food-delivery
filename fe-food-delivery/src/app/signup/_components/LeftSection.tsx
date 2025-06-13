@@ -13,6 +13,7 @@ import Link from "next/link";
 
 export default function LeftSection() {
   const [step, setStep] = useState(1);
+  const router = useRouter();
 
   const validationSchema = Yup.lazy(() =>
     step === 1
@@ -34,8 +35,6 @@ export default function LeftSection() {
         })
   );
 
-  const router = useRouter();
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -49,9 +48,9 @@ export default function LeftSection() {
       } else {
         try {
           const response = await axios.post(
-            "https://food-delivery-zuu9.onrender.com/signup", // ✅ Render backend URL
+            "https://food-delivery-zuu9.onrender.com/signup",
             {
-              email: values.email,
+              email: values.email.toLowerCase().trim(), // ✅ цэвэрлэж дамжуулна
               password: values.password,
             }
           );
@@ -62,9 +61,12 @@ export default function LeftSection() {
           if (axios.isAxiosError(error)) {
             if (error.response?.status === 400) {
               alert(error.response.data.message);
+            } else {
+              alert("Серверээс алдаа ирлээ.");
             }
           } else {
             alert("Алдаа гарлаа.");
+            console.error("Unknown error:", error);
           }
         }
       }
