@@ -30,7 +30,8 @@ export default function LeftSection() {
 
         if (res.ok) {
           resetForm();
-          // ✨ Имэйл дамжуулах — URL параметрээр
+
+          // ✅ Email-г зөвхөн URL параметрээр дамжуулна
           router.push(`/verify-otp?email=${encodeURIComponent(values.email)}`);
         } else {
           const err = await res.json();
@@ -45,6 +46,7 @@ export default function LeftSection() {
 
   return (
     <div className="p-6 w-full max-w-md mx-auto relative">
+      {/* ← Back button */}
       <button
         onClick={() => router.push("/login")}
         className="absolute top-4 left-4 w-8 h-8 rounded-md border flex items-center justify-center hover:bg-gray-100 transition"
