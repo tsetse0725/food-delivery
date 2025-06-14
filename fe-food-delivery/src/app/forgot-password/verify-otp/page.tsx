@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -14,19 +13,25 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
+  // 🔒 Нэвтэрсэн бол шууд redirect хийнэ
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
+  // 📦 Email-г URL-ээс авч байна (SSR алдаа үүсгэхгүй)
   useEffect(() => {
-    const emailFromURL = searchParams.get("email");
-    if (emailFromURL) {
-      setEmail(emailFromURL);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const emailFromURL = params.get("email");
+      if (emailFromURL) {
+        setEmail(emailFromURL);
+      }
     }
-  }, [searchParams]);
+  }, []);
 
+  // ✅ OTP баталгаажуулах
   const handleVerify = async () => {
     setError("");
     setSuccess("");
@@ -60,6 +65,7 @@ export default function VerifyOtpPage() {
     }
   };
 
+  // 🔁 OTP дахин илгээх
   const handleResend = async () => {
     setError("");
     setSuccess("");
