@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -13,39 +14,30 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // 🔒 Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // 📦 Get email from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem("reset-email");
-    console.log("📦 stored email →", stored);
-    if (stored) setEmail(stored.trim());
-  }, []);
+    const emailFromURL = searchParams.get("email");
+    if (emailFromURL) {
+      setEmail(emailFromURL);
+    }
+  }, [searchParams]);
 
-  // ✅ Verify OTP
   const handleVerify = async () => {
     setError("");
     setSuccess("");
 
     if (!email) {
-      setError("Email not found. Please go back and try again.");
+      setError("Имэйл олдсонгүй. Буцаж дахин оролдоно уу.");
       return;
     }
 
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE;
-      console.log("🌐 API Base URL:", baseURL);
-
-      if (!baseURL) {
-        setError("API base URL is not defined");
-        return;
-      }
-
       const res = await fetch(`${baseURL}/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,41 +50,27 @@ export default function VerifyOtpPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        console.warn("❌ OTP verification failed:", data);
-        setError(data.message || "Invalid OTP");
+        setError(data.message || "OTP буруу байна.");
         return;
       }
 
-      console.log("✅ OTP verified:", data);
       router.push(`/reset-password/${data.token}`);
     } catch (err) {
-      console.error("❌ OTP Error:", err);
-      setError("Something went wrong while verifying OTP.");
+      setError("Сервертэй холбогдож чадсангүй.");
     }
   };
 
-  // 🔁 Resend OTP
   const handleResend = async () => {
     setError("");
     setSuccess("");
 
-    console.log("🔁 Resend OTP clicked");
-    console.log("📨 Email to resend:", email);
-
     if (!email) {
-      setError("Email not found. Please go back and enter your email again.");
+      setError("Имэйл олдсонгүй.");
       return;
     }
 
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE;
-      console.log("🌐 Resend OTP API baseURL:", baseURL);
-
-      if (!baseURL) {
-        console.warn("⛔ No API base URL found");
-        return;
-      }
-
       const res = await fetch(`${baseURL}/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -100,17 +78,14 @@ export default function VerifyOtpPage() {
       });
 
       const data = await res.json();
-      console.log("✅ Resend OTP response:", data);
 
       if (!res.ok) {
-        console.warn("❌ Resend OTP failed:", data.message);
-        setError(data.message || "Failed to resend OTP");
+        setError(data.message || "Шинэ OTP илгээхэд алдаа гарлаа.");
       } else {
-        setSuccess("New OTP sent to your email");
+        setSuccess("Шинэ OTP таны имэйлд илгээгдлээ.");
       }
     } catch (err) {
-      console.error("❌ Resend error:", err);
-      setError("Something went wrong while resending OTP.");
+      setError("Сервер алдаа өглөө.");
     }
   };
 

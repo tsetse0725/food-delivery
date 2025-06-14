@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -30,14 +29,14 @@ export default function LeftSection() {
         });
 
         if (res.ok) {
-          alert("Reset link sent to your email!");
           resetForm();
+          router.push(`/verify-otp?email=${encodeURIComponent(values.email)}`);
         } else {
           const err = await res.json();
-          alert(err.message || "Failed to send email.");
+          alert(err.message || "Имэйл илгээж чадсангүй.");
         }
       } catch (error) {
-        console.error("❌ Error sending email:", error);
+        console.error("❌ Алдаа:", error);
         alert("Сервертэй холбогдож чадсангүй.");
       }
     },
@@ -45,7 +44,6 @@ export default function LeftSection() {
 
   return (
     <div className="p-6 w-full max-w-md mx-auto relative">
-      {/* ← Back button */}
       <button
         onClick={() => router.push("/login")}
         className="absolute top-4 left-4 w-8 h-8 rounded-md border flex items-center justify-center hover:bg-gray-100 transition"
