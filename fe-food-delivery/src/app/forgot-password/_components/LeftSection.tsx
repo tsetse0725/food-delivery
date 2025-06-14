@@ -30,6 +30,7 @@ export default function LeftSection() {
 
         if (res.ok) {
           resetForm();
+          // ✨ Имэйл дамжуулах — URL параметрээр
           router.push(`/verify-otp?email=${encodeURIComponent(values.email)}`);
         } else {
           const err = await res.json();

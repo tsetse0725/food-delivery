@@ -13,27 +13,26 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // ✅ Нэвтэрсэн хэрэглэгчийг шууд redirect хийх
+  // 🔒 Хэрвээ логин хийсэн бол redirect
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // ✅ Email-г URL-ээс авах
+  // 🌐 Email-г URL параметрээс авах
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailFromURL = params.get("email");
-
       if (emailFromURL) {
-        console.log("📩 Email from URL:", emailFromURL); // Debug log
         setEmail(emailFromURL);
+        console.log("📩 Email from URL:", emailFromURL);
       }
     }
   }, []);
 
-  // ✅ OTP баталгаажуулах
+  // ✅ Баталгаажуулах
   const handleVerify = async () => {
     setError("");
     setSuccess("");
@@ -68,7 +67,7 @@ export default function VerifyOtpPage() {
     }
   };
 
-  // 🔁 OTP дахин илгээх
+  // 🔁 Resend OTP
   const handleResend = async () => {
     setError("");
     setSuccess("");
