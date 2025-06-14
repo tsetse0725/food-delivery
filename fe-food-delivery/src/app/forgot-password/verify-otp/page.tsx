@@ -12,21 +12,21 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // 🔒 Хэрвээ хэрэглэгч логин хийсэн бол redirect
+  // 🔒 Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // 📦 localStorage-оос email авах
+  // 📦 Get email from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("reset-email");
     console.log("📦 stored email →", stored);
     if (stored) setEmail(stored.trim());
   }, []);
 
-  // ✅ OTP баталгаажуулах
+  // ✅ Verify OTP
   const handleVerify = async () => {
     setError("");
 
@@ -67,7 +67,7 @@ export default function VerifyOtpPage() {
     }
   };
 
-  // 🔁 OTP дахин илгээх
+  // 🔁 Resend OTP
   const handleResend = async () => {
     if (!email) return;
 

@@ -16,6 +16,7 @@ export default function ResetPasswordPage() {
 
   const { user, loading } = useAuth();
 
+  // 🔒 Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
@@ -27,6 +28,10 @@ export default function ResetPasswordPage() {
     validationSchema: Yup.object({
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/,
+          "Must include uppercase, lowercase, number, and symbol"
+        )
         .required("Password is required"),
       confirm: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords do not match")
@@ -64,6 +69,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="flex h-screen">
+      {/* Form side */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={formik.handleSubmit} className="w-full max-w-sm space-y-4">
           <h2 className="text-2xl font-bold">Create new password</h2>
@@ -71,6 +77,7 @@ export default function ResetPasswordPage() {
             Set a new password with a combination of letters and numbers for better security.
           </p>
 
+          {/* Password */}
           <input
             type={showPassword ? "text" : "password"}
             name="password"
@@ -84,6 +91,7 @@ export default function ResetPasswordPage() {
             <p className="text-red-500 text-sm">{formik.errors.password}</p>
           )}
 
+          {/* Confirm */}
           <input
             type={showPassword ? "text" : "password"}
             name="confirm"
@@ -97,6 +105,7 @@ export default function ResetPasswordPage() {
             <p className="text-red-500 text-sm">{formik.errors.confirm}</p>
           )}
 
+          {/* Show password checkbox */}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -106,8 +115,10 @@ export default function ResetPasswordPage() {
             Show password
           </label>
 
+          {/* Error message */}
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
+          {/* Submit button */}
           <button
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
@@ -122,6 +133,7 @@ export default function ResetPasswordPage() {
         </form>
       </div>
 
+      {/* Image side */}
       <div className="hidden md:block w-1/2 relative">
         <img
           src="/signup.png"

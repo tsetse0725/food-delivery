@@ -55,17 +55,15 @@ export default function LeftSection() {
         return;
       }
 
-      // Step 2 - Create account
+      // Step 2 - Signup API
       try {
-        console.log("🟡 Signup API руу илгээж байна...");
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/signup`;
+        console.log("📡 Signup API →", apiUrl);
 
-        const response = await axios.post(
-          "http://localhost:8000/signup", // ✅ ЛОКАЛ сервер рүү илгээж байна
-          {
-            email: values.email.toLowerCase().trim(),
-            password: values.password,
-          }
-        );
+        const response = await axios.post(apiUrl, {
+          email: values.email.toLowerCase().trim(),
+          password: values.password,
+        });
 
         console.log("🟢 Signup амжилттай:", response.data);
 
@@ -76,7 +74,7 @@ export default function LeftSection() {
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("❌ Axios алдаа:", error.message); // 🛠 message-г харуулж байна
+          console.error("❌ Axios алдаа:", error.message);
           if (error.response?.status === 400) {
             alert(error.response.data.message);
           } else {

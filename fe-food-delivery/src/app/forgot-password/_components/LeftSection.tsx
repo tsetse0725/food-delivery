@@ -17,24 +17,28 @@ export default function LeftSection() {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res = await fetch(
-          "https://food-delivery-zuu9.onrender.com/forgot-password",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: values.email }),
-          }
-        );
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+        if (!baseURL) {
+          alert("API base URL тохируулагдаагүй байна.");
+          return;
+        }
+
+        const res = await fetch(`${baseURL}/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: values.email }),
+        });
 
         if (res.ok) {
           alert("Reset link sent to your email!");
           resetForm();
         } else {
-          alert("Failed to send email.");
+          const err = await res.json();
+          alert(err.message || "Failed to send email.");
         }
       } catch (error) {
-        alert("Алдаа гарлаа.");
-        console.error(error);
+        console.error("❌ Error sending email:", error);
+        alert("Сервертэй холбогдож чадсангүй.");
       }
     },
   });
