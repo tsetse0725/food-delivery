@@ -13,39 +13,33 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // 🔒 Хэрвээ логин хийсэн бол redirect
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // 🌐 Email-г URL параметрээс авах
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailFromURL = params.get("email");
       if (emailFromURL) {
         setEmail(emailFromURL);
-        console.log("📩 Email from URL:", emailFromURL);
       }
     }
   }, []);
 
-  // ✅ Баталгаажуулах
   const handleVerify = async () => {
     setError("");
     setSuccess("");
 
     if (!email) {
-      setError("Имэйл олдсонгүй. Буцаж дахин оролдоно уу.");
+      setError("Имэйл олдсонгүй.");
       return;
     }
 
     try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
-
-      const res = await fetch(`${baseURL}/verify-otp`, {
+      const res = await fetch("http://localhost:8000/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -63,11 +57,11 @@ export default function VerifyOtpPage() {
 
       router.push(`/reset-password/${data.token}`);
     } catch (err) {
+      console.error("Verify OTP error:", err);
       setError("Сервертэй холбогдож чадсангүй.");
     }
   };
 
-  // 🔁 Resend OTP
   const handleResend = async () => {
     setError("");
     setSuccess("");
@@ -78,9 +72,7 @@ export default function VerifyOtpPage() {
     }
 
     try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
-
-      const res = await fetch(`${baseURL}/forgot-password`, {
+      const res = await fetch("http://localhost:8000/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.toLowerCase().trim() }),

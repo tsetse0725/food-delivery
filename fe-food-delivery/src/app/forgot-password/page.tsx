@@ -11,7 +11,6 @@ export default function ForgotPasswordPage() {
 
   const { user, loading } = useAuth();
 
-  // ✅ Нэвтэрсэн хэрэглэгчийг homepage рүү оруулах
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
@@ -35,8 +34,7 @@ export default function ForgotPasswordPage() {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("reset-email", email);
-        router.push("/forgot-password/verify-otp");
+        router.push(`/forgot-password/verify-otp?email=${encodeURIComponent(email)}`);
       } else {
         setError(data.message || "Something went wrong");
       }
@@ -48,7 +46,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="flex h-screen">
-      {/* Зүүн тал */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
           <button
@@ -99,7 +96,6 @@ export default function ForgotPasswordPage() {
         </form>
       </div>
 
-      {/* Баруун зураг */}
       <div className="hidden md:block w-1/2 relative">
         <img
           src="/signup.png"
