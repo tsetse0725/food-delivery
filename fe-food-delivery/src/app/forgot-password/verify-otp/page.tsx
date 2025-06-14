@@ -9,6 +9,7 @@ export default function VerifyOtpPage() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const { user, loading } = useAuth();
 
@@ -29,6 +30,7 @@ export default function VerifyOtpPage() {
   // ✅ Verify OTP
   const handleVerify = async () => {
     setError("");
+    setSuccess("");
 
     if (!email) {
       setError("Email not found. Please go back and try again.");
@@ -53,13 +55,15 @@ export default function VerifyOtpPage() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errRes = await res.json();
-        setError(errRes.message || "Invalid OTP");
+        console.warn("❌ OTP verification failed:", data);
+        setError(data.message || "Invalid OTP");
         return;
       }
 
-      const data = await res.json();
+      console.log("✅ OTP verified:", data);
       router.push(`/reset-password/${data.token}`);
     } catch (err) {
       console.error("❌ OTP Error:", err);
@@ -69,12 +73,23 @@ export default function VerifyOtpPage() {
 
   // 🔁 Resend OTP
   const handleResend = async () => {
-    if (!email) return;
+    setError("");
+    setSuccess("");
+
+    console.log("🔁 Resend OTP clicked");
+    console.log("📨 Email to resend:", email);
+
+    if (!email) {
+      setError("Email not found. Please go back and enter your email again.");
+      return;
+    }
 
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+      console.log("🌐 Resend OTP API baseURL:", baseURL);
+
       if (!baseURL) {
-        console.warn("⛔ No API base URL");
+        console.warn("⛔ No API base URL found");
         return;
       }
 
@@ -84,11 +99,18 @@ export default function VerifyOtpPage() {
         body: JSON.stringify({ email: email.toLowerCase().trim() }),
       });
 
+      const data = await res.json();
+      console.log("✅ Resend OTP response:", data);
+
       if (!res.ok) {
-        console.warn("❌ Resend OTP failed");
+        console.warn("❌ Resend OTP failed:", data.message);
+        setError(data.message || "Failed to resend OTP");
+      } else {
+        setSuccess("New OTP sent to your email");
       }
     } catch (err) {
       console.error("❌ Resend error:", err);
+      setError("Something went wrong while resending OTP.");
     }
   };
 
@@ -114,7 +136,9 @@ export default function VerifyOtpPage() {
             onChange={(e) => setOtp(e.target.value)}
             className="w-full border px-4 py-2 rounded"
           />
+
           {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && <p className="text-green-600 text-sm">{success}</p>}
 
           <button
             onClick={handleVerify}
