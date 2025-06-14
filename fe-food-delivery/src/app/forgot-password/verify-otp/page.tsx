@@ -13,19 +13,21 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // 🔒 Нэвтэрсэн бол шууд redirect хийнэ
+  // ✅ Нэвтэрсэн хэрэглэгчийг шууд redirect хийх
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // 📦 Email-г URL-ээс авч байна (SSR алдаа үүсгэхгүй)
+  // ✅ Email-г URL-ээс авах
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const emailFromURL = params.get("email");
+
       if (emailFromURL) {
+        console.log("📩 Email from URL:", emailFromURL); // Debug log
         setEmail(emailFromURL);
       }
     }
@@ -43,6 +45,7 @@ export default function VerifyOtpPage() {
 
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+
       const res = await fetch(`${baseURL}/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,6 +80,7 @@ export default function VerifyOtpPage() {
 
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+
       const res = await fetch(`${baseURL}/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
