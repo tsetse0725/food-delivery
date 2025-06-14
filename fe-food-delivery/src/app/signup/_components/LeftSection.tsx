@@ -42,36 +42,58 @@ export default function LeftSection() {
       confirmPassword: "",
     },
     validationSchema,
+    validateOnMount: true,
     onSubmit: async (values) => {
       if (step === 1) {
-        setStep(2);
-      } else {
-        try {
-          const response = await axios.post(
-            "https://food-delivery-zuu9.onrender.com/signup",
-            {
-              email: values.email.toLowerCase().trim(), // ✅ цэвэрлэж дамжуулна
-              password: values.password,
-            }
-          );
+        const errors = await formik.validateForm();
+        if (Object.keys(errors).length === 0) {
+          console.log("✅ Email зөв байна, дараагийн алхам руу орлоо");
+          setStep(2);
+        } else {
+          console.log("❌ Email validation алдаа:", errors);
+        }
+        return;
+      }
 
-          console.log("Success:", response.data);
-          router.push("/login");
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            if (error.response?.status === 400) {
-              alert(error.response.data.message);
-            } else {
-              alert("Серверээс алдаа ирлээ.");
-            }
-          } else {
-            alert("Алдаа гарлаа.");
-            console.error("Unknown error:", error);
+      // Step 2 - Create account
+      try {
+        console.log("🟡 Signup API руу илгээж байна...");
+
+        const response = await axios.post(
+          "http://localhost:8000/signup", // ✅ ЛОКАЛ сервер рүү илгээж байна
+          {
+            email: values.email.toLowerCase().trim(),
+            password: values.password,
           }
+        );
+
+        console.log("🟢 Signup амжилттай:", response.data);
+
+        if (response.status === 201 || response.status === 200) {
+          router.push("/login");
+        } else {
+          alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("❌ Axios алдаа:", error.message); // 🛠 message-г харуулж байна
+          if (error.response?.status === 400) {
+            alert(error.response.data.message);
+          } else {
+            alert("Сервертэй холбогдож чадсангүй.");
+          }
+        } else {
+          console.error("❌ Тодорхойгүй алдаа:", error);
+          alert("Тодорхойгүй алдаа гарлаа.");
         }
       }
     },
   });
+
+  const isStepOneValid =
+    formik.values.email && !formik.errors.email && formik.touched.email;
+
+  const isStepTwoValid = formik.dirty && formik.isValid;
 
   return (
     <div className="bg-white h-screen flex items-center justify-center px-10">
@@ -96,10 +118,7 @@ export default function LeftSection() {
 
         <Button
           type="submit"
-          disabled={
-            (step === 1 && (!formik.values.email || !!formik.errors.email)) ||
-            (step === 2 && !formik.isValid)
-          }
+          disabled={(step === 1 && !isStepOneValid) || (step === 2 && !isStepTwoValid)}
           className="w-[416px] h-9 font-semibold bg-black text-white disabled:bg-[#D4D4D8] disabled:text-[#A1A1AA] disabled:cursor-not-allowed"
         >
           {step === 1 ? "Let's Go" : "Create Account"}

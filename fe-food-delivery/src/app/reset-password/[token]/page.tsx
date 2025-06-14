@@ -36,22 +36,27 @@ export default function ResetPasswordPage() {
       setError("");
 
       try {
-        const res = await fetch(
-          `https://food-delivery-zuu9.onrender.com/reset-password/${token}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: values.password }),
-          }
-        );
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+        if (!baseURL) {
+          setError("API base URL is not defined");
+          return;
+        }
+
+        const res = await fetch(`${baseURL}/reset-password/${token}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: values.password }),
+        });
 
         if (res.ok) {
           router.push("/login");
         } else {
-          setError("Failed to reset password. Link may be expired.");
+          const err = await res.json();
+          console.error("❌ Reset error:", err);
+          setError(err.message || "Failed to reset password. Link may be expired.");
         }
       } catch (err) {
-        console.error("Reset error:", err);
+        console.error("❌ Reset error:", err);
         setError("Something went wrong. Please try again.");
       }
     },

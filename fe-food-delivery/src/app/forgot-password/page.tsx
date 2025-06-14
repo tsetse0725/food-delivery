@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
 
       if (res.ok) {
         localStorage.setItem("reset-email", email);
-        router.push("/forgot-password/VerifyOtp");
+        router.push("/forgot-password/verify-otp");
       } else {
         setError(data.message || "Something went wrong");
       }

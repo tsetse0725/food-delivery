@@ -12,24 +12,39 @@ export default function VerifyOtpPage() {
 
   const { user, loading } = useAuth();
 
-  // Нэвтэрсэн хэрэглэгчийг шууд homepage рүү үсрүүлэх
+  // 🔒 Хэрвээ хэрэглэгч логин хийсэн бол redirect
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
   }, [user, loading]);
 
-  // localStorage-оос email авах
+  // 📦 localStorage-оос email авах
   useEffect(() => {
     const stored = localStorage.getItem("reset-email");
+    console.log("📦 stored email →", stored);
     if (stored) setEmail(stored.trim());
   }, []);
 
-  // ✅ OTP verify хийх
+  // ✅ OTP баталгаажуулах
   const handleVerify = async () => {
     setError("");
+
+    if (!email) {
+      setError("Email not found. Please go back and try again.");
+      return;
+    }
+
     try {
-      const res = await fetch("https://food-delivery-zuu9.onrender.com/verify-otp", {
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+      console.log("🌐 API Base URL:", baseURL);
+
+      if (!baseURL) {
+        setError("API base URL is not defined");
+        return;
+      }
+
+      const res = await fetch(`${baseURL}/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -38,34 +53,42 @@ export default function VerifyOtpPage() {
         }),
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        router.push(`/reset-password/${data.token}`);
-      } else {
-        setError(data.message || "Invalid OTP");
+      if (!res.ok) {
+        const errRes = await res.json();
+        setError(errRes.message || "Invalid OTP");
+        return;
       }
+
+      const data = await res.json();
+      router.push(`/reset-password/${data.token}`);
     } catch (err) {
-      setError("Something went wrong");
-      console.error("OTP Error:", err);
+      console.error("❌ OTP Error:", err);
+      setError("Something went wrong while verifying OTP.");
     }
   };
 
-  // ✅ Resend OTP
+  // 🔁 OTP дахин илгээх
   const handleResend = async () => {
     if (!email) return;
+
     try {
-      const res = await fetch("https://food-delivery-zuu9.onrender.com/forgot-password", {
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+      if (!baseURL) {
+        console.warn("⛔ No API base URL");
+        return;
+      }
+
+      const res = await fetch(`${baseURL}/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.toLowerCase().trim() }),
       });
 
       if (!res.ok) {
-        console.log("❌ Resend failed");
+        console.warn("❌ Resend OTP failed");
       }
     } catch (err) {
-      console.error("Resend error:", err);
+      console.error("❌ Resend error:", err);
     }
   };
 
