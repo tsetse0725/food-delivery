@@ -35,7 +35,7 @@ export default function Header() {
       <div className="flex items-center gap-4">
         <span className="text-lg font-semibold text-white">Test@gmail.com</span>
         <button className="bg-white text-black px-4 py-1 rounded-full text-sm hover:bg-gray-100 transition">
-          Sign out
+          Log out
         </button>
       </div>
     </header>

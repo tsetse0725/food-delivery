@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!loading && user) {
+      console.log("✅ Already logged in user:", user);
       router.push("/");
     }
   }, [user, loading]);
@@ -28,33 +29,46 @@ export default function LoginPage() {
     }),
     onSubmit: async (values) => {
       try {
+        console.log("🚀 Submitting login with:", values);
+
         const res = await fetch("http://localhost:8000/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         });
 
+        console.log("📡 Server responded:", res);
+
         const contentType = res.headers.get("content-type");
 
         if (!res.ok) {
           if (contentType?.includes("application/json")) {
             const errorData = await res.json();
+            console.error("❌ Login error (json):", errorData);
             throw new Error(errorData.message || "Login failed");
           } else {
             const text = await res.text();
-            console.error("❌ Server returned non-JSON:", text);
+            console.error("❌ Login error (non-json):", text);
             throw new Error("Серверээс алдаатай хариу ирлээ.");
           }
         }
 
         const data = await res.json();
+        console.log("✅ Login success:", data);
+
         localStorage.setItem("token", data.token);
 
         const valid = await tokenChecker(data.token);
+        console.log("🟢 tokenChecker valid:", valid);
+
         if (valid) {
+          console.log("🏠 Redirecting to homepage...");
           router.push("/");
+        } else {
+          console.warn("⚠️ Token was invalid, not redirecting.");
         }
       } catch (error: any) {
+        console.error("❌ Catch block error:", error);
         alert(error.message || "Нэвтрэхэд алдаа гарлаа.");
       }
     },

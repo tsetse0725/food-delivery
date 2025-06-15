@@ -37,34 +37,35 @@ export default function ResetPasswordPage() {
         .oneOf([Yup.ref("password")], "Passwords do not match")
         .required("Confirm password is required"),
     }),
-    onSubmit: async (values) => {
-      setError("");
+onSubmit: async (values) => {
+  setError("");
+  const baseURL = process.env.NEXT_PUBLIC_API_BASE;
 
-      try {
-        const baseURL = process.env.NEXT_PUBLIC_API_BASE;
-        if (!baseURL) {
-          setError("API base URL is not defined");
-          return;
-        }
+  console.log("🟡 BASE URL:", baseURL);
+  console.log("🟡 Token:", token);
+  console.log("🟡 Password:", values.password);
 
-        const res = await fetch(`${baseURL}/reset-password/${token}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password: values.password }),
-        });
+  try {
+    const res = await fetch(`${baseURL}/reset-password/${token}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: values.password }),
+    });
 
-        if (res.ok) {
-          router.push("/login");
-        } else {
-          const err = await res.json();
-          console.error("❌ Reset error:", err);
-          setError(err.message || "Failed to reset password. Link may be expired.");
-        }
-      } catch (err) {
-        console.error("❌ Reset error:", err);
-        setError("Something went wrong. Please try again.");
-      }
-    },
+    const result = await res.json();
+    console.log("✅ Backend response:", result);
+
+    if (res.ok) {
+      router.push("/login");
+    } else {
+      setError(result.message || "Failed to reset password. Link may be expired.");
+    }
+  } catch (err) {
+    console.error("❌ Reset error:", err);
+    setError("Something went wrong. Please try again.");
+  }
+}
+
   });
 
   return (
