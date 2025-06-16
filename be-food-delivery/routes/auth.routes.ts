@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { UserModel } from "./models/User.model";
-import { OtpModel, OtpTypePopulated } from "./models/Otp.model";
-import { transporter } from "./utils/transporter";
-import { generateOTP } from "./utils/generateOtp";
+import { UserModel } from "../models/User.model";
+import { OtpModel, OtpTypePopulated } from "../models/Otp.model";
+import { transporter } from "../utils/transporter";
+import { generateOTP } from "../utils/generateOtp";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your-default-jwt-secret";
