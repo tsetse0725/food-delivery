@@ -15,10 +15,8 @@ app.use(authRoutes);
 const PORT = 8000;
 const MONGO_URI = process.env.MONGO_URI || "";
 
-// ✅ DB connect
 mongoose.connect(MONGO_URI);
 
-// ✅ Once Mongo connection is fully open
 mongoose.connection.once("open", () => {
   const dbName = mongoose.connection.db?.databaseName || "(unknown)";
   console.log("✅ DB connected");
@@ -29,7 +27,6 @@ mongoose.connection.once("open", () => {
   });
 });
 
-// ❌ Error listener
 mongoose.connection.on("error", (err) => {
   console.error("❌ MongoDB connection error:", err);
 });

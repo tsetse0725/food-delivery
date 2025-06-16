@@ -9,19 +9,18 @@ import { generateOTP } from "./utils/generateOtp";
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your-default-jwt-secret";
 
-// 🏁 Health check
 router.get("/", (req: Request, res: Response) => {
   res.send("🚀 Food Delivery API is running");
 });
 
-// ✅ Signup
 router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
     const trimmedEmail = email.toLowerCase().trim();
 
     const existingUser = await UserModel.findOne({ email: trimmedEmail });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser)
+      return res.status(400).json({ message: "User already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
     await UserModel.create({ email: trimmedEmail, password: hashed });
@@ -33,7 +32,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ Login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -43,9 +41,12 @@ router.post("/login", async (req, res) => {
     if (!user) return res.status(400).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Incorrect password" });
 
-    const token = jwt.sign({ userId: user._id.toString() }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user._id.toString() }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.json({ message: "Login successful", token });
   } catch (error) {
@@ -54,7 +55,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ✅ Forgot Password
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -66,7 +66,12 @@ router.post("/forgot-password", async (req, res) => {
     const code = generateOTP();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    await OtpModel.create({ code, expiresAt, user: user._id, email: trimmedEmail });
+    await OtpModel.create({
+      code,
+      expiresAt,
+      user: user._id,
+      email: trimmedEmail,
+    });
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -90,7 +95,6 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// ✅ Verify OTP
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -103,14 +107,19 @@ router.post("/verify-otp", async (req, res) => {
       code: String(code),
       user: user._id,
       email: trimmedEmail,
-    }).populate("user").lean<OtpTypePopulated>();
+    })
+      .populate("user")
+      .lean<OtpTypePopulated>();
 
     if (!otpEntry) return res.status(400).json({ message: "Invalid OTP" });
-    if (otpEntry.expiresAt < new Date()) return res.status(400).json({ message: "Expired OTP" });
+    if (otpEntry.expiresAt < new Date())
+      return res.status(400).json({ message: "Expired OTP" });
 
     await OtpModel.deleteOne({ _id: otpEntry._id });
 
-    const token = jwt.sign({ userId: user._id.toString() }, JWT_SECRET, { expiresIn: "10m" });
+    const token = jwt.sign({ userId: user._id.toString() }, JWT_SECRET, {
+      expiresIn: "10m",
+    });
 
     res.json({
       message: "OTP verified",
@@ -127,7 +136,6 @@ router.post("/verify-otp", async (req, res) => {
   }
 });
 
-// ✅ Reset Password
 router.post("/reset-password/:token", async (req, res) => {
   try {
     const { token } = req.params;
@@ -139,7 +147,9 @@ router.post("/reset-password/:token", async (req, res) => {
 
     const isSame = await bcrypt.compare(password, user.password);
     if (isSame) {
-      return res.status(400).json({ message: "New password must be different from old password" });
+      return res
+        .status(400)
+        .json({ message: "New password must be different from old password" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -154,7 +164,6 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 });
 
-// ✅ VERIFY TOKEN — for context
 router.post("/verify", (req: Request, res: Response) => {
   const { token } = req.body;
 
