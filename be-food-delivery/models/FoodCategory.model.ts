@@ -1,7 +1,5 @@
-// models/FoodCategory.model.ts
 import mongoose, { Schema, Types, Document } from "mongoose";
 
-// 1️⃣ Interface
 export interface FoodCategoryType extends Document {
   _id: Types.ObjectId;
   categoryName: string;
@@ -9,7 +7,6 @@ export interface FoodCategoryType extends Document {
   updatedAt: Date;
 }
 
-// 2️⃣ Schema
 const FoodCategorySchema = new Schema<FoodCategoryType>(
   {
     categoryName: { type: String, required: true, unique: true },
@@ -17,9 +14,8 @@ const FoodCategorySchema = new Schema<FoodCategoryType>(
   { timestamps: true }
 );
 
-// 3️⃣ Model
 export const FoodCategoryModel = mongoose.model<FoodCategoryType>(
   "FoodCategory",
   FoodCategorySchema,
-  "foodcategories" // collection нэр
+  "foodcategories"
 );

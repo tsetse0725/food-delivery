@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { FoodCategoryModel } from "../models/FoodCategory.model";
 
-// 🟢 Төрөл нэмэх
 export const addCategory = async (req: Request, res: Response) => {
   try {
     const { categoryName } = req.body;
@@ -16,7 +15,9 @@ export const addCategory = async (req: Request, res: Response) => {
     const existing = await FoodCategoryModel.findOne({ categoryName });
     if (existing) {
       console.warn("⚠️ Төрөл аль хэдийн нэмэгдсэн байна");
-      return res.status(400).json({ message: "Төрөл аль хэдийн нэмэгдсэн байна" });
+      return res
+        .status(400)
+        .json({ message: "Төрөл аль хэдийн нэмэгдсэн байна" });
     }
 
     const newCategory = await FoodCategoryModel.create({ categoryName });

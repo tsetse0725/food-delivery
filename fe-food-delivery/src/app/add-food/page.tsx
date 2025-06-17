@@ -36,10 +36,13 @@ export default function AddFoodPage() {
     formData.append("file", file);
     formData.append("upload_preset", "foodDelivery");
 
-    const res = await fetch("https://api.cloudinary.com/v1_1/dridstllg/image/upload", {
-      method: "POST",
-      body: formData,
-    });
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dridstllg/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     const data = await res.json();
     setImageUrl(data.secure_url);
