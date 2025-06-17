@@ -5,34 +5,34 @@ export const addCategory = async (req: Request, res: Response) => {
   try {
     const { categoryName } = req.body;
 
-    console.log("📥 POST /categories body →", req.body); // ← input лог
-
     if (!categoryName) {
-      console.warn("⚠️ Төрлийн нэр хоосон байна");
-      return res.status(400).json({ message: "Төрлийн нэр заавал хэрэгтэй" });
+      return res.status(400).json({ message: "Төрлийн нэр шаардлагатай" });
     }
 
-    const existing = await FoodCategoryModel.findOne({ categoryName });
-    if (existing) {
-      console.warn("⚠️ Төрөл аль хэдийн нэмэгдсэн байна");
+    // 🛡 Давхцал шалгах
+    const exists = await FoodCategoryModel.findOne({
+      categoryName: categoryName.trim().toLowerCase(),
+    });
+
+    if (exists) {
       return res
         .status(400)
-        .json({ message: "Төрөл аль хэдийн нэмэгдсэн байна" });
+        .json({ message: "Энэ төрлийн нэр аль хэдийн бүртгэгдсэн байна" });
     }
 
-    const newCategory = await FoodCategoryModel.create({ categoryName });
-
-    console.log("✅ Амжилттай нэмэгдсэн төрөл →", newCategory); // ← output лог
-
-    res.status(201).json({
-      message: "Төрөл амжилттай нэмэгдлээ",
-      category: newCategory,
+    const newCategory = await FoodCategoryModel.create({
+      categoryName: categoryName.trim().toLowerCase(),
     });
-  } catch (error) {
-    console.error("❌ Add category error:", error); // ← алдаа лог
-    res.status(500).json({ message: "Internal server error" });
+
+    res
+      .status(201)
+      .json({ message: "Төрөл амжилттай нэмэгдлээ", category: newCategory });
+  } catch (err) {
+    console.error("❌ Add category error:", err);
+    res.status(500).json({ message: "Дотоод серверийн алдаа" });
   }
 };
+
 
 // 🟡 Бүх төрлийг авах
 export const getCategories = async (req: Request, res: Response) => {

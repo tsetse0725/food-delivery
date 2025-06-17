@@ -13,7 +13,7 @@ export interface FoodType extends Document {
 
 const FoodSchema = new Schema<FoodType>(
   {
-    foodName: { type: String, required: true },
+    foodName: { type: String, required: true, unique: true }, 
     price: { type: Number, required: true },
     image: { type: String, required: true },
     ingredients: { type: String, required: true },

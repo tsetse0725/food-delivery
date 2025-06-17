@@ -17,5 +17,6 @@ const FoodCategorySchema = new Schema<FoodCategoryType>(
 export const FoodCategoryModel = mongoose.model<FoodCategoryType>(
   "FoodCategory",
   FoodCategorySchema,
-  "foodcategories"
+  "foodcategories" 
 );
+

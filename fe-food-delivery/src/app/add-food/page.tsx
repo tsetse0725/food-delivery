@@ -1,17 +1,16 @@
-// app/add-food/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 export default function AddFoodPage() {
-  const [foodName, setFoodName] = useState("");
-  const [price, setPrice] = useState("");
+  const [categories, setCategories] = useState([]);
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
+  // 🟢 Fetch categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -24,11 +23,7 @@ export default function AddFoodPage() {
     fetchCategories();
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0];
-    if (selected) setFile(selected);
-  };
-
+  // 🟢 Upload image to Cloudinary
   const handleUpload = async () => {
     if (!file) return alert("Зураг сонгоно уу");
 
@@ -49,52 +44,100 @@ export default function AddFoodPage() {
     alert("📸 Зураг амжилттай upload хийгдлээ!");
   };
 
-  const handleSave = async () => {
-    if (!foodName || !price || !imageUrl || !selectedCategory) {
-      return alert("Бүх талбарыг бөглөнө үү");
-    }
+  const formik = useFormik({
+    initialValues: {
+      foodName: "",
+      price: "",
+      ingredients: "",
+      category: "",
+    },
+    validationSchema: Yup.object({
+      foodName: Yup.string().required("Хоолны нэр шаардлагатай"),
+      price: Yup.number()
+        .typeError("Үнэ зөвхөн тоо байх ёстой")
+        .positive("Үнэ эерэг тоо байх ёстой")
+        .required("Үнэ шаардлагатай"),
+      ingredients: Yup.string().required("Орц оруулна уу"),
+      category: Yup.string().required("Төрөл сонгоно уу"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      if (!imageUrl) {
+        alert("Зураг upload хийгдээгүй байна");
+        return;
+      }
 
-    try {
-      await axios.post("http://localhost:8000/foods", {
-        foodName,
-        price: Number(price),
-        image: imageUrl,
-        ingredients: "steak, butter, salad",
-        category: selectedCategory,
-      });
-
-      alert("✅ Хоол амжилттай бүртгэгдлээ!");
-    } catch (error) {
-      console.error("❌ Food add error:", error);
-      alert("Хоол нэмэхэд алдаа гарлаа.");
-    }
-  };
+      try {
+        await axios.post("http://localhost:8000/foods", {
+          ...values,
+          price: Number(values.price),
+          image: imageUrl,
+        });
+        alert("✅ Хоол амжилттай бүртгэгдлээ!");
+        resetForm();
+        setImageUrl("");
+        setFile(null);
+      } catch (error: any) {
+        console.error("❌ Food add error:", error);
+        if (
+          error.response?.data?.message?.includes("аль хэдийн")
+        ) {
+          alert("❗️ Энэ нэртэй хоол бүртгэгдсэн байна.");
+        } else {
+          alert("❌ Хоол нэмэхэд алдаа гарлаа.");
+        }
+      }
+    },
+  });
 
   return (
     <div className="flex justify-center items-center min-h-[80vh]">
-      <div className="bg-white p-8 shadow-md rounded-md max-w-md w-full">
+      <form
+        onSubmit={formik.handleSubmit}
+        className="bg-white p-8 shadow-md rounded-md max-w-md w-full"
+      >
         <h1 className="text-2xl font-bold mb-6 text-center">🍜 Хоол нэмэх</h1>
 
         <input
           type="text"
+          name="foodName"
           placeholder="Хоолны нэр"
-          value={foodName}
-          onChange={(e) => setFoodName(e.target.value)}
-          className="w-full border px-3 py-2 mb-4"
+          value={formik.values.foodName}
+          onChange={formik.handleChange}
+          className="w-full border px-3 py-2 mb-1"
         />
+        {formik.touched.foodName && formik.errors.foodName && (
+          <p className="text-sm text-red-500 mb-2">{formik.errors.foodName}</p>
+        )}
 
         <input
           type="text"
+          name="price"
           placeholder="Үнэ ($)"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="w-full border px-3 py-2 mb-4"
+          value={formik.values.price}
+          onChange={formik.handleChange}
+          className="w-full border px-3 py-2 mb-1"
         />
+        {formik.touched.price && formik.errors.price && (
+          <p className="text-sm text-red-500 mb-2">{formik.errors.price}</p>
+        )}
+
+        <input
+          type="text"
+          name="ingredients"
+          placeholder="Орц (ж: steak, salad, rice)"
+          value={formik.values.ingredients}
+          onChange={formik.handleChange}
+          className="w-full border px-3 py-2 mb-1"
+        />
+        {formik.touched.ingredients && formik.errors.ingredients && (
+          <p className="text-sm text-red-500 mb-2">{formik.errors.ingredients}</p>
+        )}
 
         <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full border px-3 py-2 mb-4"
+          name="category"
+          value={formik.values.category}
+          onChange={formik.handleChange}
+          className="w-full border px-3 py-2 mb-1"
         >
           <option value="">-- Төрөл сонгох --</option>
           {categories.map((cat: any) => (
@@ -103,14 +146,28 @@ export default function AddFoodPage() {
             </option>
           ))}
         </select>
+        {formik.touched.category && formik.errors.category && (
+          <p className="text-sm text-red-500 mb-2">{formik.errors.category}</p>
+        )}
 
         <input
           type="file"
-          onChange={handleFileChange}
+          onChange={(e) => {
+            const selected = e.target.files?.[0];
+            if (selected) {
+              const validTypes = ["image/png", "image/jpeg", "image/jpg"];
+              if (!validTypes.includes(selected.type)) {
+                alert("❌ Зөвхөн зураг (jpg, png) сонгоно уу.");
+                return;
+              }
+              setFile(selected);
+            }
+          }}
           className="w-full border px-3 py-2 mb-4"
         />
 
         <button
+          type="button"
           onClick={handleUpload}
           className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded"
         >
@@ -118,7 +175,7 @@ export default function AddFoodPage() {
         </button>
 
         <button
-          onClick={handleSave}
+          type="submit"
           className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded mt-4"
         >
           ✅ Хоол бүртгэх
@@ -134,7 +191,7 @@ export default function AddFoodPage() {
             />
           </div>
         )}
-      </div>
+      </form>
     </div>
   );
 }
