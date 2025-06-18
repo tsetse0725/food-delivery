@@ -1,7 +1,7 @@
 // models/User.model.ts
 import mongoose, { Document, Schema, Types } from "mongoose";
 
-// ✅ 1. Interface
+//  1. Interface
 export interface UserType extends Document {
   _id: Types.ObjectId;
   email: string;
@@ -16,7 +16,7 @@ export interface UserType extends Document {
   updatedAt: Date;
 }
 
-// ✅ 2. Schema
+//  2. Schema
 const UserSchema = new Schema<UserType>(
   {
     email: { type: String, required: true, unique: true },
@@ -35,5 +35,5 @@ const UserSchema = new Schema<UserType>(
   { timestamps: true }
 );
 
-// ✅ 3. Model
+//  3. Model
 export const UserModel = mongoose.model<UserType>("User", UserSchema, "users");

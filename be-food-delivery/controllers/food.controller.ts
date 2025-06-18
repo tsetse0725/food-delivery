@@ -6,7 +6,7 @@ export const getAllFoods = async (req: Request, res: Response) => {
     const foods = await FoodModel.find().populate("category", "categoryName");
     res.json(foods);
   } catch (error) {
-    console.error("❌ Food fetch error:", error);
+    console.error(" Food fetch error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -15,18 +15,20 @@ export const addNewFood = async (req: Request, res: Response) => {
   try {
     const { foodName, price, image, ingredients, category } = req.body;
 
-    // 🧪 Хоосон талбар шалгах
+    //  Хоосон талбар шалгах
     if (!foodName || !price || !image || !category) {
       return res.status(400).json({ message: "Бүх талбарыг бөглөнө үү" });
     }
 
-    // 🛡 Давхардал шалгах
+    //  Давхардал шалгах
     const existing = await FoodModel.findOne({ foodName });
     if (existing) {
-      return res.status(400).json({ message: "Энэ нэртэй хоол аль хэдийн бүртгэгдсэн байна" });
+      return res
+        .status(400)
+        .json({ message: "Энэ нэртэй хоол аль хэдийн бүртгэгдсэн байна" });
     }
 
-    // 🆕 Хоол үүсгэх
+    // Хоол үүсгэх
     const newFood = await FoodModel.create({
       foodName,
       price,
@@ -39,10 +41,8 @@ export const addNewFood = async (req: Request, res: Response) => {
       message: "Хоол амжилттай нэмэгдлээ",
       food: newFood,
     });
-
   } catch (error) {
-    console.error("❌ Food create error:", error);
+    console.error(" Food create error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-

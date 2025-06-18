@@ -10,7 +10,7 @@ const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your-default-jwt-secret";
 
 router.get("/", (req: Request, res: Response) => {
-  res.send("🚀 Food Delivery API is running");
+  res.send(" Food Delivery API is running");
 });
 
 router.post("/signup", async (req, res) => {
@@ -27,7 +27,7 @@ router.post("/signup", async (req, res) => {
 
     res.status(201).json({ message: "Successfully registered" });
   } catch (error) {
-    console.error("❌ Signup error:", error);
+    console.error(" Signup error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
 
     res.json({ message: "Login successful", token });
   } catch (error) {
-    console.error("❌ Login error:", error);
+    console.error(" Login error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -76,11 +76,11 @@ router.post("/forgot-password", async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
-      subject: "🔐 Your OTP Code",
+      subject: " Your OTP Code",
       encoding: "base64",
       html: `
         <div style="text-align: center;">
-          <h2>🔐 One-Time Password</h2>
+          <h2> One-Time Password</h2>
           <p>Use the following code to reset your password:</p>
           <h1 style="letter-spacing: 6px">${code}</h1>
           <p>This code will expire in 5 minutes.</p>
@@ -90,7 +90,7 @@ router.post("/forgot-password", async (req, res) => {
 
     res.json({ message: "OTP sent to email" });
   } catch (error) {
-    console.error("❌ Forgot-password error:", error);
+    console.error(" Forgot-password error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -131,7 +131,7 @@ router.post("/verify-otp", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Verify OTP error:", error);
+    console.error(" Verify OTP error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -159,7 +159,7 @@ router.post("/reset-password/:token", async (req, res) => {
 
     res.json({ message: "Password reset successfully" });
   } catch (error) {
-    console.error("❌ Reset password error:", error);
+    console.error(" Reset password error:", error);
     res.status(400).json({ message: "Invalid or expired token" });
   }
 });
@@ -170,7 +170,7 @@ router.post("/verify", (req: Request, res: Response) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId?: string };
 
-    console.log("🧩 decoded in /verify:", decoded);
+    console.log(" decoded in /verify:", decoded);
 
     if (!decoded || !decoded.userId) {
       return res.status(401).json({ message: "Invalid token structure" });
@@ -178,7 +178,7 @@ router.post("/verify", (req: Request, res: Response) => {
 
     res.json({ destructToken: decoded });
   } catch (error) {
-    console.error("❌ Token verify error:", error);
+    console.error(" Token verify error:", error);
     res.status(401).json({ message: "Invalid or expired token" });
   }
 });

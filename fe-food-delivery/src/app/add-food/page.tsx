@@ -10,20 +10,18 @@ export default function AddFoodPage() {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
 
-  // 🟢 Fetch categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get("http://localhost:8000/categories");
         setCategories(res.data);
       } catch (err) {
-        console.error("❌ Failed to load categories:", err);
+        console.error(" Failed to load categories:", err);
       }
     };
     fetchCategories();
   }, []);
 
-  // 🟢 Upload image to Cloudinary
   const handleUpload = async () => {
     if (!file) return alert("Зураг сонгоно уу");
 
@@ -41,7 +39,7 @@ export default function AddFoodPage() {
 
     const data = await res.json();
     setImageUrl(data.secure_url);
-    alert("📸 Зураг амжилттай upload хийгдлээ!");
+    alert(" Зураг амжилттай upload хийгдлээ!");
   };
 
   const formik = useFormik({
@@ -78,9 +76,7 @@ export default function AddFoodPage() {
         setFile(null);
       } catch (error: any) {
         console.error("❌ Food add error:", error);
-        if (
-          error.response?.data?.message?.includes("аль хэдийн")
-        ) {
+        if (error.response?.data?.message?.includes("аль хэдийн")) {
           alert("❗️ Энэ нэртэй хоол бүртгэгдсэн байна.");
         } else {
           alert("❌ Хоол нэмэхэд алдаа гарлаа.");
@@ -130,7 +126,9 @@ export default function AddFoodPage() {
           className="w-full border px-3 py-2 mb-1"
         />
         {formik.touched.ingredients && formik.errors.ingredients && (
-          <p className="text-sm text-red-500 mb-2">{formik.errors.ingredients}</p>
+          <p className="text-sm text-red-500 mb-2">
+            {formik.errors.ingredients}
+          </p>
         )}
 
         <select

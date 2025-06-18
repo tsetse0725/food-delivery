@@ -10,27 +10,30 @@ export default function LunchSection() {
     const fetchLunch = async () => {
       try {
         const res = await axios.get("http://localhost:8000/foods");
-        console.log("📦 ALL foods from backend →", res.data); // ✅ 1
+        console.log("📦 ALL foods from backend →", res.data);
 
-        const filtered = res.data.filter((item: any) =>
-          item.category?.categoryName?.trim().toLowerCase() === "lunch"
+        const filtered = res.data.filter(
+          (item: any) =>
+            item.category?.categoryName?.trim().toLowerCase() === "lunch"
         );
-        console.log("🥗 Filtered Lunch only →", filtered); // ✅ 2
+        console.log("🥗 Filtered Lunch only →", filtered);
 
         setLunchItems(filtered);
       } catch (err) {
-        console.error("❌ Lunch fetch error:", err); // ✅ 3
+        console.error("❌ Lunch fetch error:", err);
       }
     };
 
     fetchLunch();
   }, []);
 
-  console.log("🍽 lunchItems in JSX render →", lunchItems); // ✅ 4
+  console.log("🍽 lunchItems in JSX render →", lunchItems);
 
   return (
     <section className="px-8 py-8 bg-[#3d3d3d]">
-      <h2 className="text-2xl font-semibold text-white mb-6">Lunch favorites</h2>
+      <h2 className="text-2xl font-semibold text-white mb-6">
+        Lunch favorites
+      </h2>
 
       {lunchItems.length === 0 ? (
         <p className="text-white">😢 Lunch хоол байхгүй байна.</p>
@@ -51,7 +54,9 @@ export default function LunchSection() {
                 <p className="text-sm text-gray-600">{lunch.ingredients}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="font-medium">${lunch.price.toFixed(2)}</span>
-                  <button className="bg-red-500 text-white w-6 h-6 rounded-full">+</button>
+                  <button className="bg-red-500 text-white w-6 h-6 rounded-full">
+                    +
+                  </button>
                 </div>
               </div>
             </div>

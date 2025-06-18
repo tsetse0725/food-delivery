@@ -9,7 +9,7 @@ export const addCategory = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Төрлийн нэр шаардлагатай" });
     }
 
-    // 🛡 Давхцал шалгах
+    //  Давхцал шалгах
     const exists = await FoodCategoryModel.findOne({
       categoryName: categoryName.trim().toLowerCase(),
     });
@@ -28,20 +28,19 @@ export const addCategory = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "Төрөл амжилттай нэмэгдлээ", category: newCategory });
   } catch (err) {
-    console.error("❌ Add category error:", err);
+    console.error(" Add category error:", err);
     res.status(500).json({ message: "Дотоод серверийн алдаа" });
   }
 };
 
-
-// 🟡 Бүх төрлийг авах
+//  Бүх төрлийг авах
 export const getCategories = async (req: Request, res: Response) => {
   try {
     const categories = await FoodCategoryModel.find();
-    console.log("📤 GET /categories →", categories); // ← лог гаргах
+    console.log(" GET /categories →", categories); // ← лог гаргах
     res.json(categories);
   } catch (error) {
-    console.error("❌ Get categories error:", error);
+    console.error(" Get categories error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

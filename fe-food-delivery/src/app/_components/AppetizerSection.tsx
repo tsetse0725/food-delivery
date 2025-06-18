@@ -3,6 +3,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface FoodType {
+  _id: string;
+  foodName: string;
+  price: number;
+  image: string;
+  ingredients: string;
+  category: {
+    _id: string;
+    categoryName: string;
+  };
+}
+
 export default function AppetizerSection() {
   const [appetizers, setAppetizers] = useState([]);
 
@@ -11,12 +23,12 @@ export default function AppetizerSection() {
       try {
         const res = await axios.get("http://localhost:8000/foods");
 
-        // 🔍 Зөвхөн categoryName нь "appetizer" гэсэн хоолнуудыг шүүнэ
         const filtered = res.data
-          .filter((item: any) =>
-            item.category?.categoryName?.trim().toLowerCase() === "appetizer"
+          .filter(
+            (item: any) =>
+              item.category?.categoryName?.trim().toLowerCase() === "appetizer"
           )
-          .slice(0, 3); // 🍽️ Зөвхөн 3-г харуулах
+          .slice(0, 3);
 
         setAppetizers(filtered);
       } catch (err) {
@@ -29,10 +41,12 @@ export default function AppetizerSection() {
 
   return (
     <section className="px-8 py-8 bg-[#3d3d3d]">
-      <h2 className="text-2xl font-semibold text-white mb-6">Appetizer picks</h2>
+      <h2 className="text-2xl font-semibold text-white mb-6">
+        Appetizer picks
+      </h2>
 
       {appetizers.length === 0 ? (
-        <p className="text-white">😢 Аппетайзер хоол хараахан алга...</p>
+        <p className="text-white"> Аппетайзер хоол хараахан алга...</p>
       ) : (
         <div className="grid grid-cols-3 gap-6">
           {appetizers.map((item: any) => (
@@ -50,7 +64,9 @@ export default function AppetizerSection() {
                 <p className="text-sm text-gray-600">{item.ingredients}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="font-medium">${item.price.toFixed(2)}</span>
-                  <button className="bg-red-500 text-white w-6 h-6 rounded-full">+</button>
+                  <button className="bg-red-500 text-white w-6 h-6 rounded-full">
+                    +
+                  </button>
                 </div>
               </div>
             </div>
