@@ -69,7 +69,7 @@ onSubmit: async (values) => {
   });
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-white text-black">
       {/* Form side */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={formik.handleSubmit} className="w-full max-w-sm space-y-4">

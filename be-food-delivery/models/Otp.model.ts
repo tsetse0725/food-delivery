@@ -6,7 +6,7 @@ const OtpSchema = new mongoose.Schema({
   expiresAt: { type: Date, required: true },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "User",
     required: true,
   },
   email: { type: String, required: true },

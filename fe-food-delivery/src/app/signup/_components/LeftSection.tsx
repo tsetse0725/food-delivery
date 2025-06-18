@@ -44,10 +44,16 @@ export default function LeftSection() {
     validationSchema,
     validateOnMount: true,
     onSubmit: async (values) => {
+      // Step 1 → Step 2 шилжих үед
       if (step === 1) {
         const errors = await formik.validateForm();
         if (Object.keys(errors).length === 0) {
-          console.log("✅ Email зөв байна, дараагийн алхам руу орлоо");
+          console.log("✅ Email зөв байна:", formik.values.email);
+
+          // 🛡️ Баталгаатай хадгалах
+          formik.setFieldTouched("email", true);
+          formik.setFieldValue("email", formik.values.email);
+
           setStep(2);
         } else {
           console.log("❌ Email validation алдаа:", errors);
@@ -57,8 +63,18 @@ export default function LeftSection() {
 
       // Step 2 - Signup API
       try {
+        // 🛠 Баталгаажуулалт
+        if (!values.email || !values.password) {
+          alert("Email эсвэл Password байхгүй байна!");
+          return;
+        }
+
         const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/signup`;
         console.log("📡 Signup API →", apiUrl);
+        console.log("📤 Илгээж буй өгөгдөл:", {
+          email: values.email,
+          password: values.password,
+        });
 
         const response = await axios.post(apiUrl, {
           email: values.email.toLowerCase().trim(),

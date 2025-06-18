@@ -55,6 +55,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// 📍 auth.routes.ts → /forgot-password route
+
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -66,6 +68,9 @@ router.post("/forgot-password", async (req, res) => {
     const code = generateOTP();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
+    // 🧹 өмнөх OTP-г устгах
+    await OtpModel.deleteMany({ email: trimmedEmail });
+
     await OtpModel.create({
       code,
       expiresAt,
@@ -76,11 +81,10 @@ router.post("/forgot-password", async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
-      subject: " Your OTP Code",
-      encoding: "base64",
+      subject: "Your OTP Code",
       html: `
         <div style="text-align: center;">
-          <h2> One-Time Password</h2>
+          <h2>One-Time Password</h2>
           <p>Use the following code to reset your password:</p>
           <h1 style="letter-spacing: 6px">${code}</h1>
           <p>This code will expire in 5 minutes.</p>
@@ -90,14 +94,22 @@ router.post("/forgot-password", async (req, res) => {
 
     res.json({ message: "OTP sent to email" });
   } catch (error) {
-    console.error(" Forgot-password error:", error);
+    console.error("Forgot-password error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
+
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res
+        .status(400)
+        .json({ message: "Email болон OTP хоёулаа шаардлагатай." });
+    }
+
     const trimmedEmail = email.toLowerCase().trim();
 
     const user = await UserModel.findOne({ email: trimmedEmail });
@@ -111,9 +123,14 @@ router.post("/verify-otp", async (req, res) => {
       .populate("user")
       .lean<OtpTypePopulated>();
 
-    if (!otpEntry) return res.status(400).json({ message: "Invalid OTP" });
-    if (otpEntry.expiresAt < new Date())
-      return res.status(400).json({ message: "Expired OTP" });
+    if (!otpEntry) {
+      console.warn("❌ OTP entry not found:", { email, code });
+      return res.status(400).json({ message: "OTP буруу байна." });
+    }
+
+    if (otpEntry.expiresAt < new Date()) {
+      return res.status(400).json({ message: "OTP хугацаа дууссан байна." });
+    }
 
     await OtpModel.deleteOne({ _id: otpEntry._id });
 
@@ -121,7 +138,7 @@ router.post("/verify-otp", async (req, res) => {
       expiresIn: "10m",
     });
 
-    res.json({
+    return res.json({
       message: "OTP verified",
       token,
       user: {
@@ -131,10 +148,13 @@ router.post("/verify-otp", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(" Verify OTP error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("🔴 Verify OTP error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+
 
 router.post("/reset-password/:token", async (req, res) => {
   try {

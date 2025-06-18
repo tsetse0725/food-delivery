@@ -3,20 +3,32 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface SaladType {
+  _id: string;
+  foodName: string;
+  price: number;
+  image: string;
+  ingredients: string;
+}
+
 export default function SaladSection() {
-  const [salads, setSalads] = useState([]);
+  const [salads, setSalads] = useState<SaladType[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSalads = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/foods");
-        const filtered = res.data.filter(
-          (item: any) =>
-            item.category?.categoryName?.toLowerCase() === "salad"
+        const res = await axios.get("http://localhost:8000/foods/grouped");
+
+        const group = res.data.find(
+          (g: any) => g._id?.toLowerCase() === "salad"
         );
-        setSalads(filtered);
+
+        setSalads(group?.foods || []);
       } catch (err) {
         console.error("❌ Salad fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchSalads();
@@ -25,30 +37,49 @@ export default function SaladSection() {
   return (
     <section className="px-8 py-8 bg-[#404040]">
       <h2 className="text-2xl font-semibold text-white mb-6">Salads</h2>
-      <div className="grid grid-cols-3 gap-6">
-        {salads.map((salad: any) => (
-      <div
-  key={salad._id}
-  className="bg-white rounded-xl shadow-xl border-6  border-white overflow-hidden"
->
-            <img
-              src={salad.image}
-              alt={salad.foodName}
-              className="w-full h-[180px] object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-red-600 font-semibold">{salad.foodName}</h3>
-              <p className="text-sm text-gray-600">{salad.ingredients}</p>
-              <div className="flex justify-between items-center mt-2">
-                <span className="font-medium">${salad.price.toFixed(2)}</span>
-                <button className="bg-red-500 text-white w-6 h-6 rounded-full">
+
+      {loading ? (
+        <p className="text-white">Loading...</p>
+      ) : salads.length === 0 ? (
+        <p className="text-white">No salads found</p>
+      ) : (
+        <div className="grid grid-cols-3 gap-6">
+          {salads.map((salad) => (
+            <div
+              key={salad._id}
+              className="bg-white rounded-2xl border-6 border-white shadow-lg overflow-hidden"
+            >
+              <div className="w-full aspect-[16/9] overflow-hidden rounded-t-xl">
+                <img
+                  src={salad.image}
+                  alt={salad.foodName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <div className="flex justify-between items-center mb-1">
+                  <h3 className="text-red-600 font-semibold text-sm">
+                    {salad.foodName}
+                  </h3>
+                  <p className="text-sm font-semibold">
+                    ${salad.price.toFixed(2)}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {salad.ingredients.length > 60
+                    ? salad.ingredients.slice(0, 60) + "..."
+                    : salad.ingredients}
+                </p>
+              </div>
+              <div className="flex justify-end px-4 pb-4">
+                <button className="bg-red-500 text-white rounded-full px-[9px] text-sm">
                   +
                 </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

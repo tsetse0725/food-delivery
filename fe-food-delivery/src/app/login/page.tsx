@@ -13,7 +13,6 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      console.log("✅ Already logged in user:", user);
       router.push("/");
     }
   }, [user, loading]);
@@ -37,45 +36,30 @@ export default function LoginPage() {
           body: JSON.stringify(values),
         });
 
-        console.log("📡 Server responded:", res);
-
-        const contentType = res.headers.get("content-type");
+        const data = await res.json();
 
         if (!res.ok) {
-          if (contentType?.includes("application/json")) {
-            const errorData = await res.json();
-            console.error("❌ Login error (json):", errorData);
-            throw new Error(errorData.message || "Login failed");
-          } else {
-            const text = await res.text();
-            console.error("❌ Login error (non-json):", text);
-            throw new Error("Серверээс алдаатай хариу ирлээ.");
-          }
+          throw new Error(data.message || "Login failed");
         }
 
-        const data = await res.json();
         console.log("✅ Login success:", data);
 
         localStorage.setItem("token", data.token);
 
         const valid = await tokenChecker(data.token);
-        console.log("🟢 tokenChecker valid:", valid);
-
         if (valid) {
-          console.log("🏠 Redirecting to homepage...");
           router.push("/");
         } else {
-          console.warn("⚠️ Token was invalid, not redirecting.");
+          alert("Токен хүчингүй байна.");
         }
       } catch (error: any) {
-        console.error("❌ Catch block error:", error);
         alert(error.message || "Нэвтрэхэд алдаа гарлаа.");
       }
     },
   });
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-white text-black">
       {/* Зүүн тал */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form
