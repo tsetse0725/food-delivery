@@ -20,7 +20,7 @@ export default function ChickenSection() {
       try {
         const res = await axios.get("http://localhost:8000/foods/grouped");
 
-        console.log("🐔 Grouped API response:", res.data);
+        console.log(" Grouped API response:", res.data);
 
         // Find the group with _id "chicken" (case-insensitive)
         const group = res.data.find(

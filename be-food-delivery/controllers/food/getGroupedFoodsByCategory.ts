@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { FoodModel } from "../../models/Food.model";
 
-export const getGroupedFoodsByCategory = async (req: Request, res: Response) => {
+export const getGroupedFoodsByCategory = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const groupedFoods = await FoodModel.aggregate([
       {
@@ -9,8 +12,8 @@ export const getGroupedFoodsByCategory = async (req: Request, res: Response) => 
           from: "foodcategories",
           localField: "category",
           foreignField: "_id",
-          as: "categoryInfo"
-        }
+          as: "categoryInfo",
+        },
       },
       { $unwind: "$categoryInfo" },
       {
@@ -22,12 +25,12 @@ export const getGroupedFoodsByCategory = async (req: Request, res: Response) => 
               foodName: "$foodName",
               price: "$price",
               image: "$image",
-              ingredients: "$ingredients"
-            }
-          }
-        }
+              ingredients: "$ingredients",
+            },
+          },
+        },
       },
-      { $sort: { _id: 1 } }
+      { $sort: { _id: 1 } },
     ]);
 
     // 🧠 Object болгон хувиргах (categoryName → foods[])

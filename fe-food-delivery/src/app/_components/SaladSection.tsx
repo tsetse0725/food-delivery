@@ -26,7 +26,7 @@ export default function SaladSection() {
 
         setSalads(group?.foods || []);
       } catch (err) {
-        console.error("❌ Salad fetch error:", err);
+        console.error(" Salad fetch error:", err);
       } finally {
         setLoading(false);
       }

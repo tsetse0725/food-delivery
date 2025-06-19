@@ -15,12 +15,10 @@ export const addNewFood = async (req: Request, res: Response) => {
   try {
     const { foodName, price, image, ingredients, category } = req.body;
 
-    //  Хоосон талбар шалгах
     if (!foodName || !price || !image || !category) {
       return res.status(400).json({ message: "Бүх талбарыг бөглөнө үү" });
     }
 
-    //  Давхардал шалгах
     const existing = await FoodModel.findOne({ foodName });
     if (existing) {
       return res
@@ -28,7 +26,6 @@ export const addNewFood = async (req: Request, res: Response) => {
         .json({ message: "Энэ нэртэй хоол аль хэдийн бүртгэгдсэн байна" });
     }
 
-    // Хоол үүсгэх
     const newFood = await FoodModel.create({
       foodName,
       price,

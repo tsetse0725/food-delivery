@@ -24,7 +24,7 @@ export default function LunchSection() {
         );
         setLunchItems(group?.foods || []);
       } catch (err) {
-        console.error("❌ Lunch fetch error:", err);
+        console.error(" Lunch fetch error:", err);
       } finally {
         setLoading(false);
       }
