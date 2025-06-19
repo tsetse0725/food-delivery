@@ -13,7 +13,7 @@ interface FoodType {
 
 type Props = {
   categoryName: string;
-  limit?: number; // optional slice
+  limit?: number; 
 };
 
 export default function CategorySection({ categoryName, limit = 3 }: Props) {
@@ -25,9 +25,9 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
       try {
         const res = await axios.get("http://localhost:8000/foods/grouped");
 
-        const group = res.data.foods?.[categoryName] || [];
+const group = res.data.foods?.[categoryName.toLowerCase()] || [];
+setItems(group.slice(0, limit));
 
-        setItems(group.slice(0, limit));
       } catch (err) {
         console.error(`❌ ${categoryName} fetch error:`, err);
       } finally {

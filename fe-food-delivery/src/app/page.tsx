@@ -4,10 +4,6 @@ import { useAuth } from "@/app/_components/UserProvider";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import HeroSection from "./_components/HeroSection";
-// import ChickenSection from "./_components/ChickenSection";
-// import SaladSection from "@/app/_components/SaladSection";
-// import LunchSection from "./_components/LunchSection";
-// import AppetizerSection from "./_components/AppetizerSection";
 import CategorySection from "./_components/CategorySection";
 
 export default function Home() {
@@ -27,10 +23,10 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-<CategorySection categoryName="Appetizer" />
-<CategorySection categoryName="Lunch" />
-<CategorySection categoryName="Chicken" />
-<CategorySection categoryName="Salad" />
+<CategorySection categoryName="appetizer" limit={3} />
+<CategorySection categoryName="lunch" limit={6} />
+<CategorySection categoryName="chicken" limit={6} />
+<CategorySection categoryName="salad" limit={3} />
 
     </div>
   );
