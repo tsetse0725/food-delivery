@@ -1,3 +1,5 @@
+// 📁 app/reset-password/[token]/page.tsx
+
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -16,7 +18,6 @@ export default function ResetPasswordPage() {
 
   const { user, loading } = useAuth();
 
-  // 🔒 Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
@@ -37,40 +38,33 @@ export default function ResetPasswordPage() {
         .oneOf([Yup.ref("password")], "Passwords do not match")
         .required("Confirm password is required"),
     }),
-onSubmit: async (values) => {
-  setError("");
-  const baseURL = process.env.NEXT_PUBLIC_API_BASE;
+    onSubmit: async (values) => {
+      setError("");
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
 
-  console.log("🟡 BASE URL:", baseURL);
-  console.log("🟡 Token:", token);
-  console.log("🟡 Password:", values.password);
+      try {
+        const res = await fetch(`${baseURL}/auth/reset-password/${token}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: values.password }),
+        });
 
-  try {
-    const res = await fetch(`${baseURL}/reset-password/${token}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password: values.password }),
-    });
+        const result = await res.json();
 
-    const result = await res.json();
-    console.log("✅ Backend response:", result);
-
-    if (res.ok) {
-      router.push("/login");
-    } else {
-      setError(result.message || "Failed to reset password. Link may be expired.");
-    }
-  } catch (err) {
-    console.error("❌ Reset error:", err);
-    setError("Something went wrong. Please try again.");
-  }
-}
-
+        if (res.ok) {
+          router.push("/login");
+        } else {
+          setError(result.message || "Failed to reset password. Link may be expired.");
+        }
+      } catch (err) {
+        console.error("❌ Reset error:", err);
+        setError("Something went wrong. Please try again.");
+      }
+    },
   });
 
   return (
     <div className="flex h-screen bg-white text-black">
-      {/* Form side */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={formik.handleSubmit} className="w-full max-w-sm space-y-4">
           <h2 className="text-2xl font-bold">Create new password</h2>
@@ -78,7 +72,6 @@ onSubmit: async (values) => {
             Set a new password with a combination of letters and numbers for better security.
           </p>
 
-          {/* Password */}
           <input
             type={showPassword ? "text" : "password"}
             name="password"
@@ -92,7 +85,6 @@ onSubmit: async (values) => {
             <p className="text-red-500 text-sm">{formik.errors.password}</p>
           )}
 
-          {/* Confirm */}
           <input
             type={showPassword ? "text" : "password"}
             name="confirm"
@@ -106,7 +98,6 @@ onSubmit: async (values) => {
             <p className="text-red-500 text-sm">{formik.errors.confirm}</p>
           )}
 
-          {/* Show password checkbox */}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -116,10 +107,8 @@ onSubmit: async (values) => {
             Show password
           </label>
 
-          {/* Error message */}
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {/* Submit button */}
           <button
             type="submit"
             disabled={!formik.isValid || !formik.dirty}
@@ -134,7 +123,6 @@ onSubmit: async (values) => {
         </form>
       </div>
 
-      {/* Image side */}
       <div className="hidden md:block w-1/2 relative">
         <img
           src="/signup.png"

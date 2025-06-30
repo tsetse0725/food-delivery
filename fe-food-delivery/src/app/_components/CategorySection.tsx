@@ -13,7 +13,7 @@ interface FoodType {
 
 type Props = {
   categoryName: string;
-  limit?: number; 
+  limit?: number;
 };
 
 export default function CategorySection({ categoryName, limit = 3 }: Props) {
@@ -25,15 +25,15 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
       try {
         const res = await axios.get("http://localhost:8000/foods/grouped");
 
-const group = res.data.foods?.[categoryName.toLowerCase()] || [];
-setItems(group.slice(0, limit));
-
+        const group = res.data.foods?.[categoryName.toLowerCase()] || [];
+        setItems(group.slice(0, limit));
       } catch (err) {
         console.error(`❌ ${categoryName} fetch error:`, err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchCategory();
   }, [categoryName, limit]);
 
@@ -54,13 +54,19 @@ setItems(group.slice(0, limit));
               key={item._id}
               className="bg-white rounded-2xl border-6 border-white shadow-lg overflow-hidden"
             >
-              <div className="w-full aspect-[16/9] overflow-hidden rounded-t-xl">
+              {/* 🖼 Зураг + доод баруун буланд + товч */}
+              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-xl">
                 <img
                   src={item.image}
                   alt={item.foodName}
                   className="w-full h-full object-cover"
                 />
+                <button className="absolute bottom-2 right-2 bg-white text-red-500 rounded-full w-7 h-7 flex items-center justify-center shadow-md hover:scale-105 transition">
+                  +
+                </button>
               </div>
+
+              {/* 📝 Хоолны мэдээлэл */}
               <div className="p-4">
                 <div className="flex justify-between items-center mb-1">
                   <h3 className="text-red-600 font-semibold text-sm">
@@ -75,11 +81,6 @@ setItems(group.slice(0, limit));
                     ? item.ingredients.slice(0, 60) + "..."
                     : item.ingredients}
                 </p>
-              </div>
-              <div className="flex justify-end px-4 pb-4">
-                <button className="bg-red-500 text-white rounded-full px-[9px] text-sm">
-                  +
-                </button>
               </div>
             </div>
           ))}

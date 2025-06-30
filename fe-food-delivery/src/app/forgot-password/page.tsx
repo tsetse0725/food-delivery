@@ -1,3 +1,5 @@
+// 📁 app/forgot-password/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -25,7 +27,7 @@ export default function ForgotPasswordPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8000/forgot-password", {
+      const res = await fetch("http://localhost:8000/auth/forgot-password", { // ✅ ЗАССАН
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

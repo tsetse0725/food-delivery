@@ -17,7 +17,7 @@ type UserData = {
 
 type AuthContextType = {
   user: UserData | null;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null>>; // ✅ нэмж дамжуулна
+  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
   tokenChecker: (token: string) => Promise<boolean>;
   loading: boolean;
 };
@@ -31,7 +31,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const tokenChecker = async (token: string): Promise<boolean> => {
     try {
-      const res = await axios.post("http://localhost:8000/verify", { token });
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"; // ✅ fallback
+      const res = await axios.post(`${baseURL}/auth/verify`, { token }); // ✅ зассан
+
       const { destructToken } = res.data;
 
       setUser({

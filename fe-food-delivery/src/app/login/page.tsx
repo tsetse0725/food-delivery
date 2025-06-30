@@ -28,9 +28,8 @@ export default function LoginPage() {
     }),
     onSubmit: async (values) => {
       try {
-        console.log("🚀 Submitting login with:", values);
-
-        const res = await fetch("http://localhost:8000/login", {
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"; // ✅ fallback
+        const res = await fetch(`${baseURL}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
@@ -41,8 +40,6 @@ export default function LoginPage() {
         if (!res.ok) {
           throw new Error(data.message || "Login failed");
         }
-
-        console.log("✅ Login success:", data);
 
         localStorage.setItem("token", data.token);
 
