@@ -48,33 +48,40 @@ export default function LeftSection() {
     },
     validationSchema,
     validateOnMount: true,
-    onSubmit: async (values) => {
-      if (step === 1) {
-        /* e-mail шалгалт (өөрчлөгдөөгүй) */
-        return;
-      }
+onSubmit: async (values) => {
+  console.log("✅ Signup form submitted", values); // ← ЭНЭ харагдах ёстой
 
-      try {
-        // 🔗 энд хатуу бичихийн оронд API_BASE ашиглана
-        const { status } = await axios.post(`${API_BASE}/auth/signup`, {
-          email: values.email.toLowerCase().trim(),
-          password: values.password ,
-        });
+  if (step === 1) {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length === 0) {
+      formik.setFieldTouched("email", true);
+      formik.setFieldValue("email", formik.values.email);
+      setStep(2);
+    } else {
+      console.log("❌ Email validation алдаа:", errors);
+    }
+    return;
+  }
 
-        if (status === 201 || status === 200) router.push("/login");
-        else alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 400) {
-            alert(error.response.data.message);
-          } else {
-            alert("Сервертэй холбогдож чадсангүй.");
-          }
-        } else {
-          alert("Тодорхойгүй алдаа гарлаа.");
-        }
-      }
-    },
+  try {
+    const res = await axios.post(`${API_BASE}/auth/signup`, {
+      email: values.email.toLowerCase().trim(),
+      password: values.password,
+    });
+
+    console.log("✅ Signup success:", res.status);
+
+    if (res.status === 200 || res.status === 201) {
+      router.push("/login");
+    } else {
+      alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
+    }
+  } catch (err) {
+    console.error("❌ Signup error:", err);
+    alert("Сервертэй холбогдож чадсангүй.");
+  }
+},
+
   });
 
   const isStepOneValid =
