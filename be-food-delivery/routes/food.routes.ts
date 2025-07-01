@@ -4,8 +4,11 @@ import { getGroupedFoodsByCategory } from "../controllers/food/getGroupedFoodsBy
 
 const router = Router();
 
-router.get("/foods", getAllFoods);
-router.post("/foods", addNewFood);
-router.get("/foods/grouped", getGroupedFoodsByCategory)
+router.route("/")
+  .get(getAllFoods)
+  .post(addNewFood);
+
+
+router.get("/grouped", getGroupedFoodsByCategory);
 
 export default router;

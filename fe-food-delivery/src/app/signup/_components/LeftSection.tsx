@@ -1,3 +1,5 @@
+// 📁 LeftSection.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -44,16 +46,11 @@ export default function LeftSection() {
     validationSchema,
     validateOnMount: true,
     onSubmit: async (values) => {
-      // Step 1 → Step 2 шилжих үед
       if (step === 1) {
         const errors = await formik.validateForm();
         if (Object.keys(errors).length === 0) {
-          console.log("✅ Email зөв байна:", formik.values.email);
-
-          // 🛡️ Баталгаатай хадгалах
           formik.setFieldTouched("email", true);
           formik.setFieldValue("email", formik.values.email);
-
           setStep(2);
         } else {
           console.log("❌ Email validation алдаа:", errors);
@@ -61,27 +58,13 @@ export default function LeftSection() {
         return;
       }
 
-      // Step 2 - Signup API
       try {
-        // 🛠 Баталгаажуулалт
-        if (!values.email || !values.password) {
-          alert("Email эсвэл Password байхгүй байна!");
-          return;
-        }
-
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/signup`;
-        console.log("📡 Signup API →", apiUrl);
-        console.log("📤 Илгээж буй өгөгдөл:", {
-          email: values.email,
-          password: values.password,
-        });
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/auth/signup`; // ✅ ЗАССАН
 
         const response = await axios.post(apiUrl, {
           email: values.email.toLowerCase().trim(),
           password: values.password,
         });
-
-        console.log("🟢 Signup амжилттай:", response.data);
 
         if (response.status === 201 || response.status === 200) {
           router.push("/login");
@@ -90,14 +73,12 @@ export default function LeftSection() {
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("❌ Axios алдаа:", error.message);
           if (error.response?.status === 400) {
             alert(error.response.data.message);
           } else {
             alert("Сервертэй холбогдож чадсангүй.");
           }
         } else {
-          console.error("❌ Тодорхойгүй алдаа:", error);
           alert("Тодорхойгүй алдаа гарлаа.");
         }
       }
@@ -106,7 +87,6 @@ export default function LeftSection() {
 
   const isStepOneValid =
     formik.values.email && !formik.errors.email && formik.touched.email;
-
   const isStepTwoValid = formik.dirty && formik.isValid;
 
   return (

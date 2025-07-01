@@ -1,3 +1,5 @@
+// 📁 Login/_components/LeftSection.tsx
+
 "use client";
 
 import { useFormik } from "formik";
@@ -29,8 +31,7 @@ export default function LeftSection() {
     validateOnChange: true,
     onSubmit: async (values) => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/login`;
-        console.log("📡 Login API →", apiUrl);
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/auth/login`; // ✅ ЗАССАН
 
         const res = await axios.post(apiUrl, {
           email: values.email,
@@ -58,7 +59,6 @@ export default function LeftSection() {
         onSubmit={formik.handleSubmit}
         className="w-[416px] flex flex-col items-start space-y-4"
       >
-        {/* Back товч */}
         <button
           type="button"
           onClick={() => router.back()}
@@ -67,11 +67,9 @@ export default function LeftSection() {
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        {/* Гарчиг */}
         <h1 className="text-2xl font-bold mt-4">Log in</h1>
         <p className="text-gray-500">Log in to enjoy your favorite dishes.</p>
 
-        {/* Email input */}
         <Input
           name="email"
           type="email"
@@ -84,7 +82,6 @@ export default function LeftSection() {
           <p className="text-red-500 text-sm">{formik.errors.email}</p>
         )}
 
-        {/* Password input */}
         <Input
           name="password"
           type="password"
@@ -97,7 +94,6 @@ export default function LeftSection() {
           <p className="text-red-500 text-sm">{formik.errors.password}</p>
         )}
 
-        {/* Forgot password линк */}
         <Link
           href="/forgot-password"
           className="text-sm text-blue-600 hover:underline self-start"
@@ -105,7 +101,6 @@ export default function LeftSection() {
           Forgot password?
         </Link>
 
-        {/* Submit товч */}
         <Button
           type="submit"
           disabled={!(formik.dirty && formik.isValid)}
@@ -114,7 +109,6 @@ export default function LeftSection() {
           Let's Go
         </Button>
 
-        {/* Sign up линк */}
         <p className="text-sm text-gray-600 w-full text-center">
           Don't have an account?{" "}
           <Link href="/signup" className="text-blue-600 hover:no-underline">

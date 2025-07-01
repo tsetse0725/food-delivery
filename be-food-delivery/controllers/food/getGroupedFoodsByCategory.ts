@@ -33,7 +33,14 @@ export const getGroupedFoodsByCategory = async (
       { $sort: { _id: 1 } },
     ]);
 
-    res.json(groupedFoods);
+    // 🧠 Object болгон хувиргах (categoryName → foods[])
+    const groupedByCategory = groupedFoods.reduce((acc, item) => {
+      acc[item._id] = item.foods;
+      return acc;
+    }, {} as Record<string, any[]>); // Хэрвээ TypeScript-д алдаа өгвөл Record ашиглана
+
+    res.json({ foods: groupedByCategory });
+
   } catch (err) {
     console.error(" Grouped foods error:", err);
     res.status(500).json({ error: "Failed to get grouped foods" });

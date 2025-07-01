@@ -19,7 +19,6 @@ export default function VerifyOtpPage() {
     }
   }, [user, loading]);
 
-  // ✅ Email-г URL болон localStorage-оос найдвартай авна
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -46,12 +45,7 @@ export default function VerifyOtpPage() {
     }
 
     try {
-      console.log("📤 OTP request body:", {
-        email: email.toLowerCase().trim(),
-        code: otp,
-      });
-
-      const res = await fetch("http://localhost:8000/verify-otp", {
+      const res = await fetch("http://localhost:8000/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -84,7 +78,7 @@ export default function VerifyOtpPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/forgot-password", {
+      const res = await fetch("http://localhost:8000/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.toLowerCase().trim() }),
