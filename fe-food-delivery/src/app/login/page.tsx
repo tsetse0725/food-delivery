@@ -7,6 +7,9 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+// ✅ Суурь API URL -ийг тодорхойлно
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
 export default function LoginPage() {
   const router = useRouter();
   const { user, loading, tokenChecker } = useAuth();
@@ -28,11 +31,11 @@ export default function LoginPage() {
     }),
     onSubmit: async (values) => {
       try {
-        const baseURL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"; // ✅ fallback
-        const res = await fetch(`${baseURL}/auth/login`, {
+        const res = await fetch(`${API_BASE}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
+          credentials: "include", // cookie дамжуулах бол
         });
 
         const data = await res.json();
