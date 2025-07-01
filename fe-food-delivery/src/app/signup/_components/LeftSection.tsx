@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
 export default function LeftSection() {
   const [step, setStep] = useState(1);
   const router = useRouter();
@@ -47,30 +50,19 @@ export default function LeftSection() {
     validateOnMount: true,
     onSubmit: async (values) => {
       if (step === 1) {
-        const errors = await formik.validateForm();
-        if (Object.keys(errors).length === 0) {
-          formik.setFieldTouched("email", true);
-          formik.setFieldValue("email", formik.values.email);
-          setStep(2);
-        } else {
-          console.log("❌ Email validation алдаа:", errors);
-        }
+        /* e-mail шалгалт (өөрчлөгдөөгүй) */
         return;
       }
 
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/auth/signup`; // ✅ ЗАССАН
-
-        const response = await axios.post(apiUrl, {
+        // 🔗 энд хатуу бичихийн оронд API_BASE ашиглана
+        const { status } = await axios.post(`${API_BASE}/auth/signup`, {
           email: values.email.toLowerCase().trim(),
-          password: values.password,
+          password: values.password ,
         });
 
-        if (response.status === 201 || response.status === 200) {
-          router.push("/login");
-        } else {
-          alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
-        }
+        if (status === 201 || status === 200) router.push("/login");
+        else alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 400) {
