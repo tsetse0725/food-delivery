@@ -1,57 +1,54 @@
+// 📁 app/forgot-password/verify-otp/page.tsx  (эсвэл таны actual зам)
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 
+// ✅ Суурь URL (локалд localhost, production-д Render домэйн)
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
 export default function VerifyOtpPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const { user, loading } = useAuth();
-
+  /* ─── Нэвтэрсэн хэрэглэгч бол homepage рүү ─── */
   useEffect(() => {
-    if (!loading && user) {
-      router.push("/");
-    }
-  }, [user, loading]);
+    if (!loading && user) router.push("/");
+  }, [user, loading, router]);
 
+  /* ─── URL-ээс имэйлээ аваад fallback localStorage ─── */
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const emailFromURL = params.get("email");
-      const fallback = localStorage.getItem("reset-email");
-
-      if (emailFromURL) {
-        setEmail(emailFromURL.trim());
-      } else if (fallback) {
-        setEmail(fallback.trim());
-      } else {
-        setError("Имэйл олдсонгүй. Буцаж дахин оролдоно уу.");
-      }
-    }
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const emailFromURL = params.get("email");
+    const fallback = localStorage.getItem("reset-email");
+    if (emailFromURL) setEmail(emailFromURL.trim());
+    else if (fallback) setEmail(fallback.trim());
+    else setError("Имэйл олдсонгүй. Буцаж дахин оролдоно уу.");
   }, []);
 
+  /* ─── OTP баталгаажуулах ─── */
   const handleVerify = async () => {
-    setError("");
-    setSuccess("");
-
-    if (!email) {
-      setError("Имэйл олдсонгүй.");
-      return;
-    }
+    setError(""); setSuccess("");
+    if (!email) { setError("Имэйл олдсонгүй."); return; }
 
     try {
-      const res = await fetch("http://localhost:8000/auth/verify-otp", {
+      const res = await fetch(`${API_BASE}/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: email.toLowerCase().trim(),
           code: otp,
         }),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -61,6 +58,7 @@ export default function VerifyOtpPage() {
         return;
       }
 
+      /* Backend-ээс token буцааж байгаа гэж төсөөлөв */
       router.push(`/reset-password/${data.token}`);
     } catch (err) {
       console.error("Verify OTP error:", err);
@@ -68,20 +66,17 @@ export default function VerifyOtpPage() {
     }
   };
 
+  /* ─── OTP дахин илгээх ─── */
   const handleResend = async () => {
-    setError("");
-    setSuccess("");
-
-    if (!email) {
-      setError("Имэйл олдсонгүй.");
-      return;
-    }
+    setError(""); setSuccess("");
+    if (!email) { setError("Имэйл олдсонгүй."); return; }
 
     try {
-      const res = await fetch("http://localhost:8000/auth/forgot-password", {
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.toLowerCase().trim() }),
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -96,6 +91,7 @@ export default function VerifyOtpPage() {
     }
   };
 
+  /* ─── UI ─── */
   return (
     <div className="flex h-screen bg-white text-black">
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
@@ -124,9 +120,9 @@ export default function VerifyOtpPage() {
 
           <button
             onClick={handleVerify}
-            disabled={!otp || otp.length !== 6}
+            disabled={otp.length !== 6}
             className={`w-full py-2 rounded font-semibold transition ${
-              !otp || otp.length !== 6
+              otp.length !== 6
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                 : "bg-black text-white hover:bg-gray-800"
             }`}

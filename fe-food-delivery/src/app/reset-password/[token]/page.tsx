@@ -1,5 +1,3 @@
-// 📁 app/reset-password/[token]/page.tsx
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -7,6 +5,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/app/_components/UserProvider";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
+// ✅ fallback бүхий baseURL
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -40,13 +42,13 @@ export default function ResetPasswordPage() {
     }),
     onSubmit: async (values) => {
       setError("");
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE;
 
       try {
-        const res = await fetch(`${baseURL}/auth/reset-password/${token}`, {
+        const res = await fetch(`${API_BASE}/auth/reset-password/${token}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password: values.password }),
+          credentials: "include",
         });
 
         const result = await res.json();
@@ -54,7 +56,10 @@ export default function ResetPasswordPage() {
         if (res.ok) {
           router.push("/login");
         } else {
-          setError(result.message || "Failed to reset password. Link may be expired.");
+          setError(
+            result.message ||
+              "Failed to reset password. Link may be expired."
+          );
         }
       } catch (err) {
         console.error("❌ Reset error:", err);
@@ -66,10 +71,14 @@ export default function ResetPasswordPage() {
   return (
     <div className="flex h-screen bg-white text-black">
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
-        <form onSubmit={formik.handleSubmit} className="w-full max-w-sm space-y-4">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="w-full max-w-sm space-y-4"
+        >
           <h2 className="text-2xl font-bold">Create new password</h2>
           <p className="text-sm text-gray-600">
-            Set a new password with a combination of letters and numbers for better security.
+            Set a new password with a combination of letters and numbers for
+            better security.
           </p>
 
           <input
