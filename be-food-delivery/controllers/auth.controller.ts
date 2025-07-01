@@ -6,16 +6,13 @@ export const signupUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    //  Email давхцаж байгаа эсэх шалгах
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "Имэйл бүртгэлтэй байна" });
     }
 
-    // Password хэшлэх
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //  Хэрэглэгч үүсгэх
     const newUser = await UserModel.create({
       email,
       password: hashedPassword,
