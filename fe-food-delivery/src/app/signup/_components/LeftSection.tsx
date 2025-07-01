@@ -76,10 +76,14 @@ onSubmit: async (values) => {
     } else {
       alert("Бүртгэл амжилтгүй. Дахин оролдоно уу.");
     }
-  } catch (err) {
-    console.error("❌ Signup error:", err);
-    alert("Сервертэй холбогдож чадсангүй.");
+} catch (error) {
+  if (axios.isAxiosError(error) && error.response) {
+    const msg = error.response.data?.message || "Unknown error";
+    alert(msg);                  
+  } else {
+    alert("Сүлжээний алдаа гарлаа.");
   }
+}
 },
 
   });
