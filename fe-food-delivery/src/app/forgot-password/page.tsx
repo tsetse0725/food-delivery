@@ -6,54 +6,71 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 
+
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
-  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && user) {
       router.push("/");
     }
-  }, [user, loading]);
+  }, [user, loading, router]);
 
-  const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  /* ─── Имэйл Regex шалгалт ─── */
+  const isValidEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
+  /* ─── Форм submit ─── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8000/auth/forgot-password", { // ✅ ЗАССАН
+      /* 🔗 localhost хатуу бичихийн оронд API_BASE ашиглана */
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
+        credentials: "include",
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        router.push(`/forgot-password/verify-otp?email=${encodeURIComponent(email)}`);
+        /* OTP илгээгдсэн тул verify хуудас руу имэйлтэйгээ дамжуулна */
+        router.push(
+          `/forgot-password/verify-otp?email=${encodeURIComponent(email)}`
+        );
       } else {
-        setError(data.message || "Something went wrong");
+        /* Backend-ийн message-ийг шууд үзүүлнэ (ж.нь. “User not found”) */
+        setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
       console.error("Forgot password error:", err);
-      setError("Failed to send OTP");
+      setError("Network error – OTP илгээж чадсангүй.");
     }
   };
 
+  /* ─── UI ─── */
   return (
     <div className="flex h-screen bg-white text-black">
+      {/* Зүүн тал (форм) */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+          {/* Буцах товч */}
           <button
             type="button"
             onClick={() => router.push("/login")}
             className="text-xl w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
+            aria-label="Back"
           >
             ←
           </button>
@@ -72,6 +89,7 @@ export default function ForgotPasswordPage() {
             className="w-full border px-4 py-2 rounded"
           />
 
+          {/* Алдаа гарах үед */}
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
@@ -98,10 +116,11 @@ export default function ForgotPasswordPage() {
         </form>
       </div>
 
+      {/* Баруун тал – зураг */}
       <div className="hidden md:block w-1/2 relative">
         <img
           src="/signup.png"
-          alt="Reset confirmation"
+          alt="Reset illustration"
           className="w-full h-full object-cover"
         />
       </div>
