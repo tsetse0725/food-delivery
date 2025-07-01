@@ -10,10 +10,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-type UserData = {
-  userId: string;
-  email: string;
-};
+type UserData = { userId: string; email: string };
 
 type AuthContextType = {
   user: UserData | null;
@@ -24,16 +21,31 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+// ① Суурь URL нэг удаа тодорхойлно
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // ② Token шалгах функц
   const tokenChecker = async (token: string): Promise<boolean> => {
     try {
-      const baseURL = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000"; // ✅ fallback
-      const res = await axios.post(`${baseURL}/auth/verify`, { token }); // ✅ зассан
+      const res = await axios.post(
+        `${API_BASE}/auth/verify`,
+        { token }, // ↙️ backend нь body-гоор авдаг бол үлдээнэ
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ↙️ header-ээр ч дамжуулчихъя
+          },
+        }
+      );
 
+      // backend-ээс { destructToken: { userId, email } } ирдэг гэж төсөөлөв
       const { destructToken } = res.data;
 
       setUser({
@@ -48,9 +60,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       setLoading(false);
       return;
@@ -59,11 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     tokenChecker(token).then((isValid) => {
       if (!isValid) {
         localStorage.removeItem("token");
-        setUser(null);
         router.replace("/login");
       }
       setLoading(false);
     });
+
   }, []);
 
   return (
