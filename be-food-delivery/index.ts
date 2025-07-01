@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI;
 
-// ⚠️ MONGO_URI байхгүй бол шууд зогсооно
+
 if (!MONGO_URI) {
   console.error("❌ MONGO_URI not found in .env");
   process.exit(1);
@@ -22,7 +22,13 @@ if (!MONGO_URI) {
 
 // 🧠 Middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://food-delivery-pied-eta.vercel.app"],
+    credentials: true,
+  })
+);
+
 
 // 🛣 Routes
 console.log("🚀 STARTING index.ts");
