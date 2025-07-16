@@ -1,4 +1,4 @@
-// ✅ SignupPage.tsx
+
 "use client";
 
 import LeftSection from "@/app/signup/_components/LeftSection";
@@ -19,12 +19,12 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Зүүн тал: Form хэсэг */}
+
       <div className="w-full md:w-1/2">
         <LeftSection />
       </div>
 
-      {/* Баруун тал: Зураг хэсэг */}
+
       <RightSection src="/signup.png" />
     </div>
   );

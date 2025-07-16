@@ -20,19 +20,19 @@ export const loginController = async (req: Request, res: Response) => {
     if (!isMatch)
       return res.status(400).json({ message: "Incorrect password" });
 
-    // ✅ JWT-д: userId, email, role, isVerified бүгдийг оруулж өгнө
+
     const token = jwt.sign(
       {
         userId: user._id.toString(),
         email: user.email,
-        role: user.role,                // ✅ нэмж оруулсан
-        isVerified: user.isVerified,    // ✅ нэмж оруулсан
+        role: user.role,              
+        isVerified: user.isVerified,  
       },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    // 🟢 Амжилттай login
+
     res.json({ message: "Login successful", token });
   } catch (error) {
     console.error("Login error:", error);

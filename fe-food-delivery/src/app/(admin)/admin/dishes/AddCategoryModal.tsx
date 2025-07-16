@@ -17,7 +17,7 @@ export default function AddCategoryModal({ onClose, onCategoryAdded }: Props) {
 
     try {
       await api.post("/categories", { categoryName });
-      onCategoryAdded(); // дахин fetch хийх
+      onCategoryAdded(); 
       onClose();
     } catch (err) {
       console.error("Failed to add category:", err);

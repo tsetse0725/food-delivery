@@ -1,29 +1,23 @@
 import mongoose, { Schema, Document, Types, model } from "mongoose";
 
-/* ─────────────────────────────────────────────── */
-/* 🧩 Захиалсан нэг хоолны төрөл                 */
-/* ─────────────────────────────────────────────── */
+
 export interface FoodOrderItemType {
-  food: Types.ObjectId;   // 🟡 Food-ийн ID
-  quantity: number;       // 🟡 Тоо ширхэг
+  food: Types.ObjectId;   
+  quantity: number;       
 }
 
-/* ─────────────────────────────────────────────── */
-/* 📦 Захиалгын гол Document төрөл               */
-/* ─────────────────────────────────────────────── */
+
 export interface FoodOrderType extends Document {
-  user: Types.ObjectId;                        // 👤 Хэрэглэгч ID
-  totalPrice: number;                          // 💰 Нийт үнэ
-  deliveryAddress: string;                     // 🏠 Хаяг
-  foodOrderItems: FoodOrderItemType[];         // 🍽️ Захиалсан хоолнууд
-  status: "PENDING" | "CANCELED" | "DELIVERED"; // 🚚 Хүргэлтийн төлөв
+  user: Types.ObjectId;                       
+  totalPrice: number;                          
+  deliveryAddress: string;                    
+  foodOrderItems: FoodOrderItemType[];         
+  status: "PENDING" | "CANCELED" | "DELIVERED"; 
   createdAt: Date;
   updatedAt: Date;
 }
 
-/* ─────────────────────────────────────────────── */
-/* 🍽️ Дотоод нэг хоолны subdocument schema      */
-/* ─────────────────────────────────────────────── */
+
 const FoodOrderItemSchema = new Schema<FoodOrderItemType>(
   {
     food: {
@@ -37,12 +31,10 @@ const FoodOrderItemSchema = new Schema<FoodOrderItemType>(
       min: [1, "Quantity cannot be less than 1"],
     },
   },
-  { _id: false } // ➕ subdocument учраас тусдаа _id үүсгэхгүй
+  { _id: false } 
 );
 
-/* ─────────────────────────────────────────────── */
-/* 📦 Захиалгын ерөнхий schema                   */
-/* ─────────────────────────────────────────────── */
+
 const FoodOrderSchema = new Schema<FoodOrderType>(
   {
     user: {
@@ -71,16 +63,14 @@ const FoodOrderSchema = new Schema<FoodOrderType>(
     },
   },
   {
-    timestamps: true, // createdAt, updatedAt автоматаар үүснэ
-    versionKey: false, // __v талбарыг арилгана
+    timestamps: true, 
+    versionKey: false, 
   }
 );
 
-/* ─────────────────────────────────────────────── */
-/* ✅ Model export                                */
-/* ─────────────────────────────────────────────── */
+
 export const FoodOrderModel = model<FoodOrderType>(
-  "FoodOrder",       // 🔑 Model name
-  FoodOrderSchema,   // 📄 Schema
-  "foodorders"       // 📦 MongoDB collection name
+  "FoodOrder",       
+  FoodOrderSchema,  
+  "foodorders"       
 );

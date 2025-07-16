@@ -63,15 +63,15 @@ export default function AddDishModal({ categoryName, onClose, onSuccess }: Props
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-        {/* ── Header ── */}
+
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Add new Dish to {categoryName}</h2>
           <button onClick={onClose} className="text-xl font-bold">&times;</button>
         </div>
 
-        {/* ── Form ── */}
+
         <form onSubmit={formik.handleSubmit} className="space-y-4">
-          {/* Food name & price */}
+
           <div className="flex gap-3">
             <div className="w-1/2">
               <label className="block text-sm font-medium mb-1">Food name</label>
@@ -103,7 +103,7 @@ export default function AddDishModal({ categoryName, onClose, onSuccess }: Props
             </div>
           </div>
 
-          {/* Ingredients */}
+
           <div>
             <label className="block text-sm font-medium mb-1">Ingredients</label>
             <input
@@ -115,7 +115,7 @@ export default function AddDishModal({ categoryName, onClose, onSuccess }: Props
             />
           </div>
 
-          {/* Image Upload */}
+
           <div>
             <label className="block text-sm font-medium mb-1">Food image</label>
             <label
@@ -160,7 +160,7 @@ export default function AddDishModal({ categoryName, onClose, onSuccess }: Props
             </label>
           </div>
 
-          {/* Submit */}
+
           <button
             type="submit"
             className="bg-black text-white px-4 py-2 rounded w-full hover:bg-gray-800 transition"

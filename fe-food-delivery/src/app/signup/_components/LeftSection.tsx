@@ -1,4 +1,4 @@
-// 📁 LeftSection.tsx
+
 
 "use client";
 
@@ -49,7 +49,7 @@ export default function LeftSection() {
     validationSchema,
     validateOnMount: true,
 onSubmit: async (values) => {
-  console.log("✅ Signup form submitted", values); // ← ЭНЭ харагдах ёстой
+  console.log(" Signup form submitted", values); 
 
   if (step === 1) {
     const errors = await formik.validateForm();
@@ -58,7 +58,7 @@ onSubmit: async (values) => {
       formik.setFieldValue("email", formik.values.email);
       setStep(2);
     } else {
-      console.log("❌ Email validation алдаа:", errors);
+      console.log(" Email validation алдаа:", errors);
     }
     return;
   }
@@ -69,7 +69,7 @@ onSubmit: async (values) => {
       password: values.password,
     });
 
-    console.log("✅ Signup success:", res.status);
+    console.log(" Signup success:", res.status);
 
     if (res.status === 200 || res.status === 201) {
       router.push("/login");

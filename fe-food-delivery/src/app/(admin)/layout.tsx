@@ -13,14 +13,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  // 🛡️ 1. Admin эрх шалгах
+
   useEffect(() => {
     if (!loading && user?.role !== "ADMIN") {
-      router.replace("/"); // 👈 admin биш бол redirect
+      router.replace("/"); 
     }
   }, [user, loading]);
 
-  // ⏳ 2. Хэрэглэгчийн мэдээлэл иртэл хүлээх
+
   if (loading || !user || user.role !== "ADMIN") {
     return <div className="p-8">Loading...</div>;
   }
@@ -28,16 +28,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen">
       <aside className="w-64 bg-white border-r p-6 flex flex-col space-y-8">
-        {/* Logo */}
+
         <div className="flex flex-col items-start space-y-1">
           <div className="flex items-center space-x-2">
-            <img src="/logog.png" alt="Logo" className="w-10 h-10" />
+            <img src="/Logog.png" alt="Logo" className="w-10 h-10" />
             <h1 className="text-xl font-bold">NomNom</h1>
           </div>
           <p className="text-sm text-gray-400">Swift delivery</p>
         </div>
 
-        {/* Sidebar */}
+
         <nav className="flex flex-col space-y-3">
           <Link
             href="/admin/dishes"
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
       </aside>
 
-      {/* Main content */}
+
       <main className="flex-1 bg-gray-50 p-6 overflow-auto">{children}</main>
     </div>
   );

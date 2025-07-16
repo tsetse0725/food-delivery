@@ -5,7 +5,7 @@ import AddDishModal from "./AddDishModal";
 
 type Props = {
   categoryName: string;
-  onSuccess?: () => void; // 🟡 нэмэлт prop
+  onSuccess?: () => void; 
 };
 
 export default function AddDishButton({ categoryName, onSuccess }: Props) {
@@ -29,8 +29,8 @@ export default function AddDishButton({ categoryName, onSuccess }: Props) {
           categoryName={categoryName}
           onClose={() => setOpen(false)}
           onSuccess={() => {
-            setOpen(false);     // модал хаах
-            onSuccess?.();      // page refresh дуудах (props-аар)
+            setOpen(false);    
+            onSuccess?.();     
           }}
         />
       )}

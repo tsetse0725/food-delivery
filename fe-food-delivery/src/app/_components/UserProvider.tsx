@@ -10,12 +10,12 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-/* 🔐 User-ийн төрөл */
+
 type UserData = {
   userId: string;
   email: string;
   address?: string;
-  role: "USER" | "ADMIN"; // 🆕 role нэмэгдсэн
+  role: "USER" | "ADMIN"; 
 };
 
 type AuthContextType = {
@@ -27,17 +27,17 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-/* 🔗 API base URL */
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
-/* 🔐 Provider */
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  /* ✅ Token-г шалгах */
+
   const tokenChecker = async (token: string): Promise<boolean> => {
     try {
       const res = await axios.post(
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         userId: destructToken.userId,
         email: destructToken.email,
         address: destructToken.address,
-        role: destructToken.role, // 🆕 энд нэмэгдсэн
+        role: destructToken.role, 
       });
 
       return true;
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  /* ✅ Token localStorage-с унших */
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -92,5 +92,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-/* ➕ Hook */
+
 export const useAuth = () => useContext(AuthContext);

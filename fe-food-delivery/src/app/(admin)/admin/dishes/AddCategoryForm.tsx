@@ -22,7 +22,7 @@ export default function AddCategoryForm() {
     try {
       setLoading(true);
       await api.post("/categories", { categoryName });
-      window.location.reload(); // refresh to show new category
+      window.location.reload(); 
     } catch (err: any) {
       setError(err?.response?.data?.message || "Алдаа гарлаа");
     } finally {

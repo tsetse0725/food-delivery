@@ -1,4 +1,4 @@
-// 📁 Login/_components/LeftSection.tsx
+
 
 "use client";
 
@@ -31,14 +31,14 @@ export default function LeftSection() {
     validateOnChange: true,
     onSubmit: async (values) => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/auth/login`; // ✅ ЗАССАН
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE}/auth/login`; 
 
         const res = await axios.post(apiUrl, {
           email: values.email,
           password: values.password,
         });
 
-        console.log("🟢 Login success:", res.data);
+        console.log(" Login success:", res.data);
         localStorage.setItem("token", res.data.token);
         await tokenChecker(res.data.token);
       } catch (error) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/lib.api";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-import { useToast } from "@/app/_context/toastContext"; // ✅ toast context import
+import { useToast } from "@/app/_context/toastContext"; 
 
 type Category = {
   _id: string;
@@ -26,7 +26,7 @@ export default function DishesCategorySelector({
   const [showModal, setShowModal] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
-  const { showToast } = useToast(); // ✅ toast context ашиглах
+  const { showToast } = useToast(); 
 
   const fetchCategories = async () => {
     try {
@@ -50,10 +50,10 @@ export default function DishesCategorySelector({
       setShowModal(false);
       fetchCategories();
 
-      showToast("✓ New Category is being added to the menu", "success"); // ✅ success toast
+      showToast("✓ New Category is being added to the menu", "success"); 
     } catch (err) {
       console.error("Failed to add category", err);
-      showToast("Failed to add category", "error"); // ❌ error toast
+      showToast("Failed to add category", "error"); 
     }
   };
 
@@ -64,7 +64,7 @@ export default function DishesCategorySelector({
       <h2 className="text-lg font-semibold mb-4">Dishes category</h2>
 
       <div className="flex flex-wrap gap-3">
-        {/* All Dishes */}
+
         <button
           onClick={() => onSelect(null)}
           className={cn(
@@ -87,7 +87,7 @@ export default function DishesCategorySelector({
           </span>
         </button>
 
-        {/* Category Buttons */}
+
         {categories.map((cat) => {
           const isSelected = selected === cat.categoryName;
           return (
@@ -116,7 +116,7 @@ export default function DishesCategorySelector({
           );
         })}
 
-        {/* + Add Category */}
+
         <button
           onClick={() => setShowModal(true)}
           className="w-8 h-8 border border-gray-300 rounded-full text-lg font-bold text-gray-600 hover:border-black hover:text-black transition"
@@ -125,11 +125,11 @@ export default function DishesCategorySelector({
         </button>
       </div>
 
-      {/* Popup modal */}
+
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            {/* Header */}
+
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Add new category</h2>
               <button onClick={() => setShowModal(false)}>
@@ -137,7 +137,7 @@ export default function DishesCategorySelector({
               </button>
             </div>
 
-            {/* Input + Button in one row */}
+
             <div className="flex items-center gap-2">
               <input
                 className="flex-1 border rounded-md px-4 py-2"

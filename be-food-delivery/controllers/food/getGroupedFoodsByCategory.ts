@@ -33,11 +33,11 @@ export const getGroupedFoodsByCategory = async (
       { $sort: { _id: 1 } },
     ]);
 
-    // 🧠 Object болгон хувиргах (categoryName → foods[])
+
     const groupedByCategory = groupedFoods.reduce((acc, item) => {
       acc[item._id] = item.foods;
       return acc;
-    }, {} as Record<string, any[]>); // Хэрвээ TypeScript-д алдаа өгвөл Record ашиглана
+    }, {} as Record<string, any[]>); 
 
     res.json({ foods: groupedByCategory });
 

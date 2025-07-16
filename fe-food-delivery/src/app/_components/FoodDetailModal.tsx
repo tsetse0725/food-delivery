@@ -9,7 +9,7 @@ interface Props {
     foodName: string;
     price: number;
     image: string;
-    ingredients: string[]; // ✅ string[] гэж ил тод зааж өгсөн
+    ingredients: string[]; 
   };
   isInCart: boolean;
   onClose: () => void;
@@ -36,13 +36,13 @@ export default function FoodDetailModal({
     onClose();
   };
 
-  // ✅ массив → харагдах string хэлбэр
+
   const ingredientList = item.ingredients.join(", ");
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
       <div className="relative bg-white rounded-2xl w-full max-w-3xl p-6 flex flex-col md:flex-row gap-6">
-        {/* ❌ Close */}
+
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl"
           onClick={onClose}
@@ -50,7 +50,7 @@ export default function FoodDetailModal({
           ×
         </button>
 
-        {/* 🖼️ Image */}
+
         <div className="relative w-full md:w-1/2 aspect-[4/3] rounded-xl overflow-hidden">
           <Image
             src={item.image}
@@ -60,7 +60,7 @@ export default function FoodDetailModal({
           />
         </div>
 
-        {/* 📄 Content */}
+
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <h2 className="text-lg font-semibold text-red-600">
@@ -74,7 +74,7 @@ export default function FoodDetailModal({
               ${Number(item.price * quantity).toFixed(2)}
             </p>
 
-            {/* ➖ 1 ➕ */}
+
             <div className="flex items-center gap-2 mb-4">
               <button
                 className="px-3 py-1 rounded bg-gray-100 text-xl"
@@ -92,7 +92,7 @@ export default function FoodDetailModal({
             </div>
           </div>
 
-          {/* 🟢 Add / 🔴 Remove */}
+
           {isInCart ? (
             <button
               className="bg-gray-300 text-black py-2 rounded-full hover:bg-gray-400 transition"

@@ -35,7 +35,7 @@ export default function LoginPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
-          credentials: "include", // cookie дамжуулах бол
+          credentials: "include", 
         });
 
         const data = await res.json();
@@ -60,7 +60,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex h-screen bg-white text-black">
-      {/* Зүүн тал */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form
           onSubmit={formik.handleSubmit}
@@ -133,7 +133,7 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* Баруун тал */}
+
       <div className="hidden md:block w-1/2 relative">
         <Image
           src="/signup.png"

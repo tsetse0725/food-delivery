@@ -15,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve", // ✅ JSX-ийг зөвшөөрсөн гол тохиргоо
+    "jsx": "preserve", 
     "incremental": true,
     "plugins": [
       {
@@ -25,7 +25,7 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ] // ✅ Path alias тохиргоо (жишээ нь @/app/utils/cartUtils)
+      ] 
     }
   },
   "include": [

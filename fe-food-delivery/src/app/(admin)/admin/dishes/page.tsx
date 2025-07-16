@@ -6,21 +6,21 @@ import DishCard from "./DishCard";
 import DishesCategorySelector from "./DishesCategorySelector";
 import AddDishButton from "./AddDishButton";
 import type { Food } from "@/app/types";
-import { ToastProvider, useToast } from "@/app/_context/toastContext"; // 🆕
+import { ToastProvider, useToast } from "@/app/_context/toastContext"; 
 
 type GroupedFood = {
   categoryName: string;
   foods: Food[];
 };
 
-// ⬇️ Actual Page content logic
+
 function DishesPageContent() {
   const [groupedFoods, setGroupedFoods] = useState<GroupedFood[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [refreshFlag, setRefreshFlag] = useState(false);
 
-  const { showToast } = useToast(); // ✅ toast ашиглах
+  const { showToast } = useToast(); 
 
   const handleRefresh = () => setRefreshFlag((prev) => !prev);
 
@@ -45,7 +45,7 @@ function DishesPageContent() {
         setGroupedFoods(groupedArray);
       } catch (error) {
         console.error("Failed to fetch foods:", error);
-        showToast("❌ Failed to load foods", "error");
+        showToast(" Failed to load foods", "error");
       } finally {
         setLoading(false);
       }
@@ -74,7 +74,7 @@ function DishesPageContent() {
         categoryCounts={categoryCounts}
       />
 
-      {/* 🟥 Сонгосон category хоосон бол зөвхөн Add товч харуулна */}
+
       {selectedCategory && !visibleGroups.length && (
         <div className="space-y-4">
           <h2 className="text-xl font-medium">{selectedCategory} (0)</h2>
@@ -84,14 +84,14 @@ function DishesPageContent() {
               categoryName={selectedCategory}
               onSuccess={() => {
                 handleRefresh();
-                showToast("✅ Dish added successfully");
+                showToast(" Dish added successfully");
               }}
             />
           </div>
         </div>
       )}
 
-      {/* 🟢 Харин хоолтой бүлгүүдийг харуулна */}
+
       {visibleGroups.map((group) => (
         <div key={group.categoryName} className="space-y-4">
           <h2 className="text-xl font-medium">
@@ -103,7 +103,7 @@ function DishesPageContent() {
               categoryName={group.categoryName}
               onSuccess={() => {
                 handleRefresh();
-                showToast("✅ Dish added successfully");
+                showToast(" Dish added successfully");
               }}
             />
 {group.foods.map((food) => (

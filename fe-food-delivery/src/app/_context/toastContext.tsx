@@ -19,19 +19,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setMessage(msg);
     setType(toastType);
 
-    // ✅ Дараалсан toast-уудыг зөв дарааллаар харуулах
+
     setVisible(false);
     setTimeout(() => {
       setVisible(true);
-      setTimeout(() => setVisible(false), 3000); // 3 секунд харуулна
-    }, 50); // 50ms хүлээгээд дараагийнхийг trigger хийж байна
+      setTimeout(() => setVisible(false), 3000); 
+    }, 50); 
   };
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
 
-      {/* Toast UI */}
       {visible && (
         <div
           className={`fixed top-5 right-5 px-4 py-2 rounded shadow-lg text-white transition-all duration-300 z-50 ${

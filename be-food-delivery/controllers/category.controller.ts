@@ -9,7 +9,7 @@ export const addCategory = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Төрлийн нэр шаардлагатай" });
     }
 
-    //  Давхцал шалгах
+
     const exists = await FoodCategoryModel.findOne({
       categoryName: categoryName.trim().toLowerCase(),
     });
@@ -33,11 +33,11 @@ export const addCategory = async (req: Request, res: Response) => {
   }
 };
 
-//  Бүх төрлийг авах
+
 export const getCategories = async (req: Request, res: Response) => {
   try {
     const categories = await FoodCategoryModel.find();
-    console.log(" GET /categories →", categories); // ← лог гаргах
+    console.log(" GET /categories →", categories); 
     res.json(categories);
   } catch (error) {
     console.error(" Get categories error:", error);

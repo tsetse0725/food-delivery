@@ -16,10 +16,10 @@ export default function PaymentInfo({
 
   return (
     <div className="bg-white rounded-2xl p-4 space-y-4">
-      {/* ── Title ── */}
+
       <h2 className="text-lg font-semibold">Payment info</h2>
 
-      {/* ── Price breakdown ── */}
+
       <div className="space-y-3 text-sm text-gray-600">
         <div className="flex justify-between">
           <span>Items</span>
@@ -38,7 +38,7 @@ export default function PaymentInfo({
         </div>
       </div>
 
-      {/* ── Checkout button ── */}
+      
       <button
         disabled={disabled}
         onClick={onCheckout}

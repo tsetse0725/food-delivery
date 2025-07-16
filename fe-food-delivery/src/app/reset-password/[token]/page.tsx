@@ -6,7 +6,7 @@ import { useAuth } from "@/app/_components/UserProvider";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// ✅ fallback бүхий baseURL
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
           );
         }
       } catch (err) {
-        console.error("❌ Reset error:", err);
+        console.error(" Reset error:", err);
         setError("Something went wrong. Please try again.");
       }
     },

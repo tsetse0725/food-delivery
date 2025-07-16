@@ -37,7 +37,7 @@ export default function RootLayout({
           <ToastProvider>
             <CartProvider>
               <ClientWrapper>{children}</ClientWrapper>
-              <Toaster position="top-center" reverseOrder={false} /> {/* ✅ toast UI */}
+              <Toaster position="top-center" reverseOrder={false} /> 
             </CartProvider>
           </ToastProvider>
         </AuthProvider>

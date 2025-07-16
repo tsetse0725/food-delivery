@@ -3,13 +3,13 @@
 import Image from "next/image";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import EditDishModal from "./EditDishModal"; // ⬅️ popup modal
+import EditDishModal from "./EditDishModal"; 
 
 import type { Food } from "@/app/types";
 
 type Props = {
   food: Food;
-  onSuccess: () => void; // ⬅️ refresh хийлгэх функц
+  onSuccess: () => void; 
 };
 
 export default function DishCard({ food, onSuccess }: Props) {
@@ -38,7 +38,7 @@ export default function DishCard({ food, onSuccess }: Props) {
         </div>
       </div>
 
-      {/* 🟢 Modal нээгдэх нөхцөл */}
+
       {open && (
 <EditDishModal
   food={food}

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-// ✅ 1. Zod schema-г эндээ л шууд бичнэ
+
 const schema = z.object({
   location: z.string().min(1, "Delivery location is required"),
 });

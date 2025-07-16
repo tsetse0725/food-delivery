@@ -10,7 +10,7 @@ export const verifyTokenController = async (req: Request, res: Response) => {
   const { token } = req.body;
 
   console.log(" [VERIFY] Token from req.body:", token);
-  console.log("🔐 JWT_SECRET (first 5 chars):", JWT_SECRET.slice(0, 5), "...");
+  console.log(" JWT_SECRET (first 5 chars):", JWT_SECRET.slice(0, 5), "...");
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as {
@@ -21,7 +21,7 @@ export const verifyTokenController = async (req: Request, res: Response) => {
     console.log(" Decoded token:", decoded);
 
     if (!decoded || !decoded.userId || !decoded.email) {
-      console.warn("⚠️ Token missing userId or email");
+      console.warn(" Token missing userId or email");
       return res.status(401).json({ message: "Invalid token structure" });
     }
 
@@ -29,7 +29,7 @@ export const verifyTokenController = async (req: Request, res: Response) => {
     const user = await UserModel.findById(decoded.userId);
 
     if (!user) {
-      console.warn("⚠️ User not found in DB");
+      console.warn(" User not found in DB");
       return res.status(404).json({ message: "User not found" });
     }
 

@@ -17,7 +17,7 @@ export default function EnterLocationModal({ onClose }: Props) {
   const API_BASE =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
-  // 👉 хэрвээ context дээр address байсан бол анхнаасаа input-д үзүүлнэ
+
   useEffect(() => {
     if (user?.address) setAddress(user.address);
   }, [user]);
@@ -32,16 +32,16 @@ export default function EnterLocationModal({ onClose }: Props) {
       setLoading(true);
       setError("");
 
-      // 🟡 PATCH API-д шинэ хаяг илгээх
+
       await axios.patch(`${API_BASE}/users/${user?.userId}`, { address });
 
-      // 🔵 Context шинэчилнэ
+
       setUser((prev) => (prev ? { ...prev, address } : prev));
 
-      // ✅ Modal хаах
+
       onClose();
     } catch (err) {
-      setError("⚠️ Хаяг хадгалах үед алдаа гарлаа.");
+      setError(" Хаяг хадгалах үед алдаа гарлаа.");
     } finally {
       setLoading(false);
     }

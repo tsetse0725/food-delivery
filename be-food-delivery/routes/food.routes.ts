@@ -3,8 +3,8 @@ import {
   getAllFoods,
   addNewFood,
   getFoodById,
-  updateFood,     // ⬅️ энэ нэрийг авсан
-  deleteFood,     // ⬅️ энэ нэрийг авсан
+  updateFood,     
+  deleteFood,     
 } from "../controllers/food/food.controller";
 
 import { getGroupedFoodsByCategory } from "../controllers/food/getGroupedFoodsByCategory";
@@ -17,7 +17,7 @@ router.post("/", upload.single("image"), addNewFood);
 router.get("/grouped", getGroupedFoodsByCategory);
 router.get("/:id", getFoodById);
 
-// ✅ Шинэчлэлт болон устгал
+
 router.patch("/:id", upload.single("image"), updateFood);
 router.delete("/:id", deleteFood);
 

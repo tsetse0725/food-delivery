@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/lib.api";
 import type { Order } from "@/app/types/order";
-import ChangeStatusModal from "./ChangeStatusModal"; // 🆕 Import modal component
+import ChangeStatusModal from "./ChangeStatusModal"; 
 
 type Props = {
   orders: Order[];
@@ -179,7 +179,7 @@ export default function OrderTable({ orders }: Props) {
         ))}
       </div>
 
-      {/* ChangeStatusModal */}
+
       <ChangeStatusModal
         open={openModal}
         onClose={() => setOpenModal(false)}

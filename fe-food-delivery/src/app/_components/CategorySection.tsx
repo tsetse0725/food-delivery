@@ -7,13 +7,13 @@ import { useToast } from "@/app/_context/toastContext";
 import FoodDetailModal from "./FoodDetailModal";
 import type { Food } from "@/app/types";
 
-// 🟡 Food from API
+
 type RawFood = {
   _id: string;
   foodName: string;
   price: number;
   image: string;
-  ingredients: string; // backend-с ирэхдээ string
+  ingredients: string; 
 };
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
   limit?: number;
 };
 
-// 🧠 string → string[] хөрвүүлдэг util
+
 function parseIngredients(input: string): string[] {
   return input.split(",").map((s) => s.trim());
 }
@@ -34,7 +34,7 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
   const { cart, addToCart, removeFromCart } = useCart();
   const { showToast } = useToast();
 
-  // 🔄 fetch grouped food by category
+
   useEffect(() => {
     const fetchCategory = async () => {
       try {
@@ -129,7 +129,7 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
         </div>
       )}
 
-      {/* 🧨 FoodDetailModal */}
+
       {selectedItem && (
         <FoodDetailModal
           item={{
@@ -137,7 +137,7 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
             foodName: selectedItem.foodName,
             price: selectedItem.price,
             image: selectedItem.image,
-            ingredients: parseIngredients(selectedItem.ingredients), // ✅ массив болгож өгнө
+            ingredients: parseIngredients(selectedItem.ingredients), 
           }}
           isInCart={cart.some((c) => c.foodId === selectedItem._id)}
           onClose={() => setSelectedItem(null)}

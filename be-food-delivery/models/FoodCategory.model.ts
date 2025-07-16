@@ -15,7 +15,7 @@ const FoodCategorySchema = new Schema<FoodCategoryType>(
 );
 
 export const FoodCategoryModel = mongoose.model<FoodCategoryType>(
-  "FoodCategory",            // model name
+  "FoodCategory",           
   FoodCategorySchema,
-  "foodcategories"          // actual collection name in DB
+  "foodcategories"        
 );

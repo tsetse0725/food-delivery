@@ -18,7 +18,7 @@ export default function ChangeStatusModal({ open, onClose, selectedIds, onSubmit
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-        {/* ❌ Close icon */}
+
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -26,10 +26,10 @@ export default function ChangeStatusModal({ open, onClose, selectedIds, onSubmit
           <X size={20} />
         </button>
 
-        {/* 🏷 Title */}
+
         <h2 className="text-lg font-semibold mb-4">Change delivery state</h2>
 
-        {/* 🔘 Options */}
+
         <div className="flex gap-2 mb-6">
           {["DELIVERED", "PENDING", "CANCELED"].map((status) => (
             <button
@@ -50,7 +50,7 @@ export default function ChangeStatusModal({ open, onClose, selectedIds, onSubmit
           ))}
         </div>
 
-        {/* 💾 Save */}
+
         <button
           onClick={() => {
             onSubmit(selectedStatus);

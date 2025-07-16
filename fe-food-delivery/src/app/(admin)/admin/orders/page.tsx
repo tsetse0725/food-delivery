@@ -12,7 +12,7 @@ export default function AdminOrderPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await api.get<Order[]>("/orders"); // 👈 Optional: энд тип зааж өгвөл илүү найдвартай
+        const res = await api.get<Order[]>("/orders"); 
         setOrders(res.data);
       } catch (error) {
         console.error("Захиалга татах үед алдаа:", error);

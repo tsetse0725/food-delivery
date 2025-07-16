@@ -26,10 +26,10 @@ export default function CartTab() {
 
   return (
     <div className="bg-white rounded-2xl p-4 space-y-4">
-      {/* ── Title ── */}
+
       <h2 className="text-lg font-semibold">My cart</h2>
 
-      {/* ── If empty ── */}
+
       {cart.length === 0 ? (
         <>
           <div className="bg-gray-100 rounded-xl flex flex-col items-center justify-center text-center px-4 py-10">
@@ -46,12 +46,12 @@ export default function CartTab() {
             </p>
           </div>
 
-          {/* ⛔ PaymentInfo хоосон үед ч гэсэн 0 үзүүлж байна */}
+
 
         </>
       ) : (
         <>
-          {/* ── Cart list ── */}
+
           <ul className="space-y-4">
             {cart.map((item) => (
               <li key={item.foodId} className="flex items-start gap-4">
@@ -89,7 +89,7 @@ export default function CartTab() {
             ))}
           </ul>
 
-          {/* ── Payment summary ── */}
+
           <PaymentInfo
             total={grandTotal}
             disabled={false}

@@ -1,4 +1,4 @@
-// 📁 app/forgot-password/page.tsx
+
 
 "use client";
 
@@ -24,17 +24,17 @@ export default function ForgotPasswordPage() {
     }
   }, [user, loading, router]);
 
-  /* ─── Имэйл Regex шалгалт ─── */
+
   const isValidEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-  /* ─── Форм submit ─── */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      /* 🔗 localhost хатуу бичихийн оронд API_BASE ашиглана */
+
       const res = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,12 +45,12 @@ export default function ForgotPasswordPage() {
       const data = await res.json();
 
       if (res.ok) {
-        /* OTP илгээгдсэн тул verify хуудас руу имэйлтэйгээ дамжуулна */
+
         router.push(
           `/forgot-password/verify-otp?email=${encodeURIComponent(email)}`
         );
       } else {
-        /* Backend-ийн message-ийг шууд үзүүлнэ (ж.нь. “User not found”) */
+
         setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
@@ -59,13 +59,13 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  /* ─── UI ─── */
+
   return (
     <div className="flex h-screen bg-white text-black">
-      {/* Зүүн тал (форм) */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
-          {/* Буцах товч */}
+
           <button
             type="button"
             onClick={() => router.push("/login")}
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
             className="w-full border px-4 py-2 rounded"
           />
 
-          {/* Алдаа гарах үед */}
+
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
         </form>
       </div>
 
-      {/* Баруун тал – зураг */}
+
       <div className="hidden md:block w-1/2 relative">
         <img
           src="/signup.png"

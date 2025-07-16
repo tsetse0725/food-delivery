@@ -1,4 +1,4 @@
-// 📁 app/forgot-password/verify-otp/page.tsx  (эсвэл таны actual зам)
+
 
 "use client";
 
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_components/UserProvider";
 
-// ✅ Суурь URL (локалд localhost, production-д Render домэйн)
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -19,12 +19,12 @@ export default function VerifyOtpPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  /* ─── Нэвтэрсэн хэрэглэгч бол homepage рүү ─── */
+
   useEffect(() => {
     if (!loading && user) router.push("/");
   }, [user, loading, router]);
 
-  /* ─── URL-ээс имэйлээ аваад fallback localStorage ─── */
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -35,7 +35,7 @@ export default function VerifyOtpPage() {
     else setError("Имэйл олдсонгүй. Буцаж дахин оролдоно уу.");
   }, []);
 
-  /* ─── OTP баталгаажуулах ─── */
+
   const handleVerify = async () => {
     setError(""); setSuccess("");
     if (!email) { setError("Имэйл олдсонгүй."); return; }
@@ -58,7 +58,7 @@ export default function VerifyOtpPage() {
         return;
       }
 
-      /* Backend-ээс token буцааж байгаа гэж төсөөлөв */
+
       router.push(`/reset-password/${data.token}`);
     } catch (err) {
       console.error("Verify OTP error:", err);
@@ -66,7 +66,7 @@ export default function VerifyOtpPage() {
     }
   };
 
-  /* ─── OTP дахин илгээх ─── */
+
   const handleResend = async () => {
     setError(""); setSuccess("");
     if (!email) { setError("Имэйл олдсонгүй."); return; }
@@ -91,7 +91,7 @@ export default function VerifyOtpPage() {
     }
   };
 
-  /* ─── UI ─── */
+
   return (
     <div className="flex h-screen bg-white text-black">
       <div className="w-full md:w-1/2 flex items-center justify-center p-6">

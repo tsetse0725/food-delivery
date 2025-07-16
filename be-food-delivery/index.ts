@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.routes";
 import foodRoutes from "./routes/food.routes";
 import categoryRoutes from "./routes/category.routes";
 import orderRoutes from "./routes/order.routes";
-import userRoutes from "./routes/user.routes"; // ✅ Нэмэгдсэн хэсэг
+import userRoutes from "./routes/user.routes";
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.use(
       "http://localhost:3000",
       "https://food-delivery-pied-eta.vercel.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // 🔁 PATCH нэмсэн бол сайн
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], 
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -39,16 +39,16 @@ app.use("/auth", authRoutes);
 app.use("/foods", foodRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
-app.use("/users", userRoutes); // ✅ шинэ хэрэглэгчийн route
+app.use("/users", userRoutes); 
 
-console.log("✅ Routes бүртгэл дууслаа");
+console.log(" Routes бүртгэл дууслаа");
 
 mongoose.connect(MONGO_URI);
 
 mongoose.connection.once("open", () => {
   const dbName = mongoose.connection.db?.databaseName || "(unknown)";
-  console.log("✅ DB connected");
-  console.log("📦 Used DB:", dbName);
+  console.log(" DB connected");
+  console.log(" Used DB:", dbName);
 
   app.listen(PORT, () => {
     console.log(`🚀 Server running at: http://localhost:${PORT}`);

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-//  Schema тодорхойлох
+
 const OtpSchema = new mongoose.Schema({
   code: { type: String, required: true },
   expiresAt: { type: Date, required: true },
@@ -13,10 +13,10 @@ const OtpSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-//  Модель экспортлох (collection name → "otps")
+
 export const OtpModel = mongoose.model("Otp", OtpSchema, "otps");
 
-//  Нарийн төрөл (populate хийсэн үед ашиглах)
+
 export interface OtpTypePopulated extends mongoose.Document {
   code: string;
   expiresAt: Date;

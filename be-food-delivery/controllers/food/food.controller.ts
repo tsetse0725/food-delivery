@@ -4,7 +4,7 @@ import { FoodCategoryModel } from "../../models/FoodCategory.model";
 import { cloudinary } from "../../utils/cloudinary";
 import streamifier from "streamifier";
 
-/* 🔎 GET /foods – Бүх хоол */
+
 export const getAllFoods = async (req: Request, res: Response) => {
   try {
     const foods = await FoodModel.find().populate("category", "categoryName");
@@ -15,7 +15,7 @@ export const getAllFoods = async (req: Request, res: Response) => {
   }
 };
 
-/* ➕ POST /foods – Шинэ хоол нэмэх */
+
 export const addNewFood = async (req: Request, res: Response) => {
   try {
     const { foodName, price, ingredients, categoryName } = req.body;
@@ -64,7 +64,7 @@ export const addNewFood = async (req: Request, res: Response) => {
   }
 };
 
-/* 🔎 GET /foods/:id */
+
 export const getFoodById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -77,7 +77,7 @@ export const getFoodById = async (req: Request, res: Response) => {
   }
 };
 
-/* 🔁 PATCH /foods/:id */
+
 export const updateFood = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { foodName, price, ingredients, categoryName } = req.body;
@@ -124,7 +124,7 @@ export const updateFood = async (req: Request, res: Response) => {
   }
 };
 
-/* ❌ DELETE /foods/:id */
+
 export const deleteFood = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {

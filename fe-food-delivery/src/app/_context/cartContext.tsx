@@ -8,7 +8,7 @@ import {
   ReactNode,
 } from "react";
 
-import type { CartItem } from "@/app/types"; // ✅ Гаднаас import хийж байна
+import type { CartItem } from "@/app/types"; 
 
 type CartContextType = {
   cart: CartItem[];
@@ -42,7 +42,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           setCart(normalized);
         }
       } catch (e) {
-        console.error("❌ Failed to parse cart from localStorage:", e);
+        console.error(" Failed to parse cart from localStorage:", e);
       }
     }
   }, []);
@@ -67,8 +67,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
 
       console.groupCollapsed("🛒 addToCart");
-      console.log("▶️ New item:", item);
-      console.log("📦 Updated cart:", updatedCart);
+      console.log("▶ New item:", item);
+      console.log(" Updated cart:", updatedCart);
       console.groupEnd();
 
       return updatedCart;

@@ -17,7 +17,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
 
   const hideLayout =
     noLayoutPaths.some((path) => pathname.startsWith(path)) ||
-    pathname.startsWith("/admin"); // ✅ Admin layout дээр Header/Footer нуух
+    pathname.startsWith("/admin"); 
 
   return (
     <>
