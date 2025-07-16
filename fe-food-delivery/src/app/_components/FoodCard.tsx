@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { saveUnitData } from "@/app/utils/cartUtils";
+import { useCart } from "@/app/_context/cartContext";
+import { useToast } from "@/app/_context/toastContext"; 
+import { useEffect } from "react";
 
 type Props = {
   _id: string;
@@ -11,16 +13,25 @@ type Props = {
 };
 
 export default function FoodCard({ _id, foodName, price, image }: Props) {
-  const qty = 1;
+  const { addToCart } = useCart();
+  const { showToast } = useToast(); 
+
+  useEffect(() => {
+    console.log("useCart context loaded");
+  }, []);
 
   const handleAddToCart = () => {
-    saveUnitData("cart", {
-      _id,
-      foodName,
+    console.log(" Add to cart clicked!", _id);
+
+    addToCart({
+      foodId: _id,
+      name: foodName,
       price,
       image,
-      qty,
+      quantity: 1,
     });
+
+    showToast("🍽️ Сагсанд амжилттай нэмэгдлээ!", "success"); 
   };
 
   return (

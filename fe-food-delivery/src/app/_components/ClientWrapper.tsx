@@ -1,4 +1,3 @@
-
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -7,6 +6,7 @@ import Footer from "./Footer";
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
   const noLayoutPaths = [
     "/login",
     "/signup",
@@ -15,7 +15,9 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
     "/forgot-password/verify-otp",
   ];
 
-  const hideLayout = noLayoutPaths.some((path) => pathname.startsWith(path));
+  const hideLayout =
+    noLayoutPaths.some((path) => pathname.startsWith(path)) ||
+    pathname.startsWith("/admin"); // ✅ Admin layout дээр Header/Footer нуух
 
   return (
     <>
