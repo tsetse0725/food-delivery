@@ -170,7 +170,7 @@
 
 "@types/streamifier@^0.1.2":
   version "0.1.2"
-  resolved "https://registry.npmjs.org/@types/streamifier/-/streamifier-0.1.2.tgz"
+  resolved "https://registry.yarnpkg.com/@types/streamifier/-/streamifier-0.1.2.tgz#c60aa16e211de2191bba43658ee078654e9b1b18"
   integrity sha512-W53GwxY5Tunz3JUoP1YWDidrAadenSZKOBKMRl6RO3yThOFd03w7yx3HypI8ABGuUCGDHCHUml/5e45FWRt1TQ==
   dependencies:
     "@types/node" "*"
