@@ -19,7 +19,7 @@ export const getAllFoods = async (req: Request, res: Response) => {
 export const addNewFood = async (req: Request, res: Response) => {
   try {
     const { foodName, price, ingredients, categoryName } = req.body;
-    const file = req.file as Express.Multer.File | undefined;
+    const file = req.file;
 
     if (!foodName || !price || !ingredients || !categoryName || !file) {
       return res.status(400).json({ message: "Бүх талбарыг бөглөнө үү" });
@@ -35,8 +35,8 @@ export const addNewFood = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Category олдсонгүй" });
     }
 
-    const streamUpload = (): Promise<{ secure_url: string }> => {
-      return new Promise((resolve, reject) => {
+    const streamUpload = (): Promise<{ secure_url: string }> =>
+      new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "food-delivery" },
           (error, result) => {
@@ -46,7 +46,6 @@ export const addNewFood = async (req: Request, res: Response) => {
         );
         streamifier.createReadStream(file.buffer).pipe(stream);
       });
-    };
 
     const result = await streamUpload();
 
@@ -82,7 +81,7 @@ export const getFoodById = async (req: Request, res: Response) => {
 export const updateFood = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { foodName, price, ingredients, categoryName } = req.body;
-  const file = req.file as Express.Multer.File | undefined;
+  const file = req.file;
 
   try {
     const food = await FoodModel.findById(id);
@@ -94,8 +93,8 @@ export const updateFood = async (req: Request, res: Response) => {
     let imageUrl = food.image;
 
     if (file) {
-      const streamUpload = (): Promise<{ secure_url: string }> => {
-        return new Promise((resolve, reject) => {
+      const streamUpload = (): Promise<{ secure_url: string }> =>
+        new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
             { folder: "food-delivery" },
             (error, result) => {
@@ -105,7 +104,7 @@ export const updateFood = async (req: Request, res: Response) => {
           );
           streamifier.createReadStream(file.buffer).pipe(stream);
         });
-      };
+
       const result = await streamUpload();
       imageUrl = result.secure_url;
     }
