@@ -1,4 +1,4 @@
-// src/types/order.ts
+
 export type OrderItem = {
   food: {
     foodName: string;

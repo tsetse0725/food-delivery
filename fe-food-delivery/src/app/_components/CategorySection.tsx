@@ -42,7 +42,7 @@ export default function CategorySection({ categoryName, limit = 3 }: Props) {
         const group = res.data.foods?.[categoryName.toLowerCase()] || [];
         setItems(group.slice(0, limit));
       } catch (err) {
-        console.error(`❌ ${categoryName} fetch error:`, err);
+        console.error(` ${categoryName} fetch error:`, err);
       } finally {
         setLoading(false);
       }

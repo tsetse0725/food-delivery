@@ -8,7 +8,7 @@ import { useState } from "react";
 type Props = {
   categoryName: string;
   onClose: () => void;
-  onSuccess?: () => void; // ✅ шинээр нэмэгдсэн prop
+  onSuccess?: () => void;
 };
 
 export default function AddDishModal({ categoryName, onClose, onSuccess }: Props) {
@@ -44,10 +44,10 @@ export default function AddDishModal({ categoryName, onClose, onSuccess }: Props
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        // ✅ Амжилттай нэмэгдсэн тохиолдолд onSuccess дуудах
+
         onSuccess?.();
       } catch (error) {
-        console.error("❌ Failed to add food:", error);
+        console.error(" Failed to add food:", error);
       }
     },
   });

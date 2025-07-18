@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// ✅ Суурь API URL -ийг тодорхойлно
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
 export default function LoginPage() {

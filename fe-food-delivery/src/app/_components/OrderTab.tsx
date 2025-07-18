@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/_components/UserProvider";
-import { api } from "@/lib/lib.api"; // axios instance
+import { api } from "@/lib/lib.api"; 
 
 interface OrderItem {
   food: {
@@ -43,7 +43,7 @@ export default function OrderTab() {
     };
 
     fetchOrders();
-  }, [user?.userId]); // ✅ зөвхөн userId-г харах
+  }, [user?.userId]); 
 
   if (loading) {
     return <p className="text-sm text-gray-500">Loading orders...</p>;
