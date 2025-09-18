@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
 import authRoutes from "./routes/auth.routes";
 import foodRoutes from "./routes/food.routes";
 import categoryRoutes from "./routes/category.routes";
@@ -20,6 +21,7 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
+
 app.use(express.json());
 app.use(
   cors({
@@ -27,43 +29,44 @@ app.use(
       "http://localhost:3000",
       "https://food-delivery-pied-eta.vercel.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], 
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
-console.log("🚀 STARTING index.ts");
+console.log("🚀 Starting Express server...");
+
 
 app.use("/auth", authRoutes);
 app.use("/foods", foodRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/orders", orderRoutes);
-app.use("/users", userRoutes); 
+app.use("/users", userRoutes);
 
-console.log(" Routes бүртгэл дууслаа");
+console.log(" Routes registered");
 
-mongoose.connect(MONGO_URI);
 
-mongoose.connection.once("open", () => {
-  const dbName = mongoose.connection.db?.databaseName || "(unknown)";
-  console.log(" DB connected");
-  console.log(" Used DB:", dbName);
-
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running at: http://localhost:${PORT}`);
-
-    app._router?.stack?.forEach((r: any) => {
-      if (r.route && r.route.path) {
-        const methods = Object.keys(r.route.methods)
-          .map((m) => m.toUpperCase())
-          .join(", ");
-        console.log(`➡️  ${methods} ${r.route.path}`);
-      }
-    });
-  });
+app.listen(PORT, () => {
+  console.log(` Server running at: http://localhost:${PORT}`);
 });
 
+
+mongoose
+  .connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+  })
+  .then(() => {
+    const dbName = mongoose.connection.db?.databaseName || "(unknown)";
+    console.log(` MongoDB connected: ${dbName}`);
+  })
+  .catch((err) => {
+    console.error(" MongoDB connection error:", err);
+  });
+
+
 mongoose.connection.on("error", (err) => {
-  console.error(" MongoDB connection error:", err);
+  console.error("⚠️ MongoDB runtime error:", err);
 });
