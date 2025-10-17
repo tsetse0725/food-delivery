@@ -49,7 +49,7 @@ const handleBackHome = () => {
           onClick={handleBackHome}
           className="bg-gray-200 hover:bg-gray-300 text-sm px-6 py-2 rounded-full"
         >
-          Back to home
+          Back to home.
         </button>
       </div>
     </div>
